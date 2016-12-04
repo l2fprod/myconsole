@@ -7,14 +7,16 @@ declare let d3: any;
 @Component({
   selector: 'dashboard',
   templateUrl: 'dashboard.component.html',
-  styleUrls: ['dashboard.component.css']
+  styleUrls: ['dashboard.component.css'],
+  host: {
+    'class': 'flex layout-column'
+  }
 })
 export class DashboardComponent extends TaggableViewerComponent implements OnInit {
 
   appStatusOptions = {
     chart: {
       type: 'pieChart',
-      height: 300,
       donut: true,
       x: function(d){ return d.label;},
       y: function(d){ return d.value;},
@@ -32,9 +34,7 @@ export class DashboardComponent extends TaggableViewerComponent implements OnIni
   appSplitOptions = {
     chart: {
       type: 'sunburstChart',
-      height: 300,
       color: d3.scale.category20c(),
-      duration: 2500,
       mode: 'value'
     }
   };
