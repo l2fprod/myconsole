@@ -10,6 +10,10 @@ import * as PouchDB from 'pouchdb';
 declare let require: any;
 PouchDB.plugin(require('pouchdb-find'));
 
+export class Region {
+  constructor(public name: string, public display: string, public icon:string) { }
+}
+
 
 @Injectable()
 export class TagService {
@@ -27,7 +31,11 @@ export class TagService {
   private _filteredByTypes: Taggable[][] = [];
   private _filter:TaggableFilter = new AcceptAllFilter();
 
-  static REGIONS = [ 'ng', 'eu-gb', 'au-syd'];
+  public static REGIONS = [
+    new Region('ng', 'US South', 'us'),
+    new Region('eu-gb', 'United Kingdom', 'gb'),
+    new Region('au-syd', 'Sydney', 'au')
+  ];
 
   /**
    * @param {Http} http - The injected Http.
@@ -63,6 +71,11 @@ export class TagService {
 
   getFilteredTaggableByType(type:TaggableType, filter:TaggableFilter):Taggable[] {
     return this.getTaggableByType(type).filter(taggable => filter.accept(taggable));
+  }
+
+  getTaggablesMatching(text:string):Taggable[] {
+    const filter = TaggableFilterFactory.buildFilter(text);
+    return this._filteredTaggables.filter(taggable => filter.accept(taggable));
   }
 
   getTaggableByType(type:TaggableType):Taggable[] {
@@ -165,9 +178,9 @@ export class TagService {
   }
 
 
-  private fetchTaggables(region: string, call: string, type: string): any {
+  private fetchTaggables(region: Region, call: string, type: string): any {
     const apiRoot = environment.apiUrl;
-    const path = apiRoot + '/' + region +  call; //'?call=' + encodeURIComponent(call);
+    const path = apiRoot + '/' + region.name +  call; //'?call=' + encodeURIComponent(call);
 
     console.log('Fetching', path, type);
     const headers = new Headers({
@@ -186,7 +199,7 @@ export class TagService {
         }
 
         return results.map((item: any) => {
-          return Taggable.newTaggable(type + '-' + item.metadata.guid, type, [], item, region);
+          return Taggable.newTaggable(type + '-' + item.metadata.guid, type, [], item, region.name);
         });
       })
       .catch(this.handleError)

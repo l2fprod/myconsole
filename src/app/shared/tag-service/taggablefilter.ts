@@ -49,6 +49,16 @@ export class TextFilter implements TaggableFilter {
   }
 }
 
+export class TypeFilter implements TaggableFilter {
+  constructor(private type:string) {}
+  accept(taggable:Taggable):boolean {
+    return taggable.type === this.type;
+  }
+  toString():string {
+    return 'type:' + this.type;
+  }
+}
+
 export class TagFilter implements TaggableFilter {
   constructor(private tag:string) {}
   accept(taggable:Taggable):boolean {
@@ -154,6 +164,8 @@ export class TaggableFilterFactory {
         return new SpaceFilter(text.substring('space:'.length));
       } else if (text.startsWith('service:')) {
         return new ServiceFilter(text.substring('service:'.length));
+      } else if (text.startsWith('type:')) {
+        return new TypeFilter(text.substring('type:'.length));
       } else if (text.startsWith('tag:')) {
         return new TagFilter(text.substring('tag:'.length));
       } else if (text.startsWith('status:')) {

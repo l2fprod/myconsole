@@ -23,6 +23,12 @@
   font-size: 24px;
 }
 
+.number-per-region {
+  position: relative;
+  display: inline;
+  white-space: nowrap;
+}
+
 .chart-title {
   font-size: 24px;
 }

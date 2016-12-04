@@ -11,19 +11,23 @@
     <span>
       <input type="text" id="token" #token (change)="setToken(token.value);"
         placeholder="cf oauth-token here..." />
-
       <button md-raised-button color="accent" (click)="refreshAll();">Refresh All</button>
       <button md-raised-button color="accent" (click)="refreshApps();">Refresh Apps</button>
-      <!-- <md-icon fontSet="fa" fontIcon="fa-cog"></md-icon> -->
+      <a md-icon-button href="https://github.com/l2fprod/myconsole">
+        <md-icon class="toolbar-icon" svgSrc="/assets/github-circle.svg"></md-icon>
+      </a>
+      <a md-icon-button href="https://twitter.com/l2fprod">
+        <md-icon class="toolbar-icon twitter-icon" svgSrc="/assets/twitter.svg"></md-icon>
+      </a>
     </span>
 
   </md-toolbar>
 
   <div class="layout-row layout-fill flex">
     <div class="app-views layout-column">
-      <a md-icon-button routerLink="/dashboard"><md-icon svgSrc="/assets/view-chart.svg"></md-icon></a>
-      <a md-icon-button routerLink="/list"><md-icon svgSrc="/assets/view-list.svg"></md-icon></a>
-      <a md-icon-button routerLink="/browse"><md-icon svgSrc="/assets/view-grid.svg"></md-icon></a>
+      <a md-icon-button routerLink="/dashboard" [routerLinkActive]="['is-active']"><md-icon svgSrc="/assets/view-chart.svg"></md-icon></a>
+      <a md-icon-button routerLink="/browse" [routerLinkActive]="['is-active']"><md-icon svgSrc="/assets/view-grid.svg"></md-icon></a>
+      <a md-icon-button routerLink="/list" [routerLinkActive]="['is-active']"><md-icon svgSrc="/assets/view-list.svg"></md-icon></a>
       <span class="flex"></span>
       <button md-icon-button><md-icon svgSrc="/assets/settings.svg"></md-icon></button>
     </div>

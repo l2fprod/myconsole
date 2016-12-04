@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef  } from '@angular/core';
-import { TagService, Taggable, TaggableType, TaggableFilterFactory } from '../index';
+import { TagService, Taggable, TaggableType, TaggableFilterFactory, Region } from '../index';
 
 export class TaggableViewerComponent implements OnInit {
 
@@ -34,12 +34,20 @@ export class TaggableViewerComponent implements OnInit {
     this.tagServiceSubscription.unsubscribe();
   }
 
+  getRegions():Region[] {
+    return TagService.REGIONS;
+  }
+
   getTaggableTypes():TaggableType[] {
     return Taggable.TYPES;
   }
 
   getTaggableByType(type:TaggableType):Taggable[] {
     return this.tagService.getTaggableByType(type);
+  }
+
+  getTaggablesMatching(text:string):Taggable[] {
+    return this.tagService.getTaggablesMatching(text);
   }
 
   getAvailableTags() {

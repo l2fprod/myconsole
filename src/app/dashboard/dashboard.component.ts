@@ -40,7 +40,9 @@ export class DashboardComponent extends TaggableViewerComponent implements OnIni
   };
   appSplitData = [];
 
-  totalMemory = 0;
+  stats = {
+    memory: 0
+  };
 
   constructor(public tagService: TagService, cd: ChangeDetectorRef) {
     super(tagService, cd);
@@ -56,12 +58,6 @@ export class DashboardComponent extends TaggableViewerComponent implements OnIni
   }
 
   private computeData() {
-
-    this.totalMemory = 0;
-    this.getTaggableByType(Taggable.TYPE_APPLICATION).forEach(
-      taggable => this.totalMemory += (taggable.target.entity.memory * taggable.target.entity.instances)
-    );
-
     const upFilter = new StatusFilter('STARTED');
     const downFilter = new NotFilter(upFilter);
 
@@ -89,19 +85,19 @@ export class DashboardComponent extends TaggableViewerComponent implements OnIni
       }
     ];
     TagService.REGIONS.forEach(region => {
-      const regionFilter = new RegionFilter(region);
+      const regionFilter = new RegionFilter(region.name);
       const regionNode = {
-        name: region,
+        name: region.display,
         children: [ {
-          name: `Count (${region})`,
+          name: `Count (${region.display})`,
           children: [
             {
-              name: `Up (${region})`,
+              name: `Up (${region.display})`,
               value: this.tagService.getFilteredTaggableByType(Taggable.TYPE_APPLICATION,
               new CompoundFilter([ regionFilter, upFilter ])).length
             },
             {
-              name: `Down (${region})`,
+              name: `Down (${region.display})`,
               value: this.tagService.getFilteredTaggableByType(Taggable.TYPE_APPLICATION,
               new CompoundFilter([ regionFilter, downFilter ])).length
             }
@@ -111,5 +107,27 @@ export class DashboardComponent extends TaggableViewerComponent implements OnIni
       appSplitData[0].children.push(regionNode);
     });
     this.appSplitData = appSplitData;
+
+    this.stats = {
+      memory: 0,
+    };
+    TagService.REGIONS.forEach(region => {
+      this.stats[region.name] = {
+        count: {},
+        memory: {},
+      };
+      Taggable.TYPES.forEach(type => {
+        this.stats[region.name].count[type.name] = this.tagService.getTaggablesMatching(`type:${type.name} region:${region.name}`).length;
+      });
+
+      let memoryInThisRegion = 0;
+      this.tagService.getTaggablesMatching(`type:app region:${region.name}`).forEach(
+        taggable => memoryInThisRegion += (taggable.target.entity.memory * taggable.target.entity.instances)
+      );
+      this.stats.memory += memoryInThisRegion;
+      this.stats[region.name].memory = memoryInThisRegion;
+    });
+
   }
+
 }

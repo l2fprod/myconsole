@@ -122,6 +122,16 @@ $warn:    md-palette($md-red);
 // Create the theme object (a Sass map containing all of the palettes).
 $theme: md-light-theme($primary, $accent, $warn);
 
+.app-views a,
+.app-views button {
+  color: #616161;
+}
+
+.app-views a.is-active {
+  color: #000000;
+  background-color: #e7e7e7;
+}
+
 .search {
   color: white;
   background-color: md-color($md-cyan, 400);
@@ -139,15 +149,11 @@ $theme: md-light-theme($primary, $accent, $warn);
   color: #EFEFEF;
 }
 
-.number-value {
-  color: #999999;
-}
-
-.number-description {
-  color: #999999;
-}
-
-.chart-title {
+.chart-title,
+.number-description,
+.number-value,
+.number-per-region
+{
   color: #999999;
 }
 

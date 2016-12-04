@@ -51,6 +51,16 @@ md-toolbar {
   outline: none;
 }
 
+.toolbar-icon {
+  padding: 8px;
+  height: 40px;
+  width: 40px;
+}
+
+.twitter-icon {
+  fill: #FFFFFF !important;
+}
+
 #token {
   font-size: 12px;
   padding: 10px;
