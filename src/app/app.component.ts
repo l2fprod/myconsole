@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { TagService } from './shared/index';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -9,8 +10,18 @@ import { TagService } from './shared/index';
 
 export class AppComponent {
 
-  constructor(public tagService: TagService) {
+  searchText:string;
+
+  constructor(public tagService: TagService, private route: ActivatedRoute) {
     console.log("App is starting");
+  }
+
+  ngOnInit() {
+    this.route.queryParams.subscribe(queryParams => {
+      console.log('Setting search field to', queryParams['q']);
+      this.searchText = queryParams['q'];
+      this.tagService.filterTaggables(queryParams['q']);
+    });
   }
 
   filterTaggables(text:string) {

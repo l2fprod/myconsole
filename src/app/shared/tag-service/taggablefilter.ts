@@ -154,6 +154,10 @@ export class StatusFilter implements TaggableFilter {
 
 export class TaggableFilterFactory {
   static buildFilter(query:string):TaggableFilter {
+    if (query === null || query === undefined) {
+      return new AcceptAllFilter();
+    }
+
     const filterTexts = query.trim().split(' ');
     const filters = filterTexts.map(text => {
       if (text.startsWith('region:')) {
@@ -174,7 +178,6 @@ export class TaggableFilterFactory {
         return new TextFilter(text);
       }
     });
-    console.log(filters);
     return new CompoundFilter(filters);
   }
 }

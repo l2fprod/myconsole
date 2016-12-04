@@ -5,6 +5,7 @@ import { Observer } from 'rxjs/Observer';
 import { Taggable, TaggableType } from './taggable';
 import { TaggableFilter, TaggableFilterFactory, AcceptAllFilter } from './taggablefilter';
 import { environment } from '../../../environments';
+import { Router } from '@angular/router';
 
 import * as PouchDB from 'pouchdb';
 declare let require: any;
@@ -29,7 +30,9 @@ export class TagService {
   private _taggables:Taggable[] = [];
   private _filteredTaggables:Taggable[] = [];
   private _filteredByTypes: Taggable[][] = [];
+
   private _filter:TaggableFilter = new AcceptAllFilter();
+  private _filterText:string = "";
 
   public static REGIONS = [
     new Region('ng', 'US South', 'us'),
@@ -41,7 +44,7 @@ export class TagService {
    * @param {Http} http - The injected Http.
    * @constructor
    */
-  constructor(private http: Http) {
+  constructor(private http: Http, private router: Router) {
     console.log('Initializing TagService...');
     this._observable = new Observable(observer =>
       this._observer = observer).share();
@@ -60,13 +63,27 @@ export class TagService {
     return this._observable;
   }
 
-  filterTaggables(text:string) {
-    this._filter = TaggableFilterFactory.buildFilter(text);
+  private updateFilteredTaggables() {
     this._filteredTaggables = this._taggables.filter(taggable => this._filter.accept(taggable));
     this._filteredByTypes = [];
     if (this._observer) {
       this._observer.next(this._filteredTaggables);
     }
+  }
+
+  filterTaggables(text:string) {
+    if (text === this._filterText) {
+      console.warn('Filter did not change, ignoring request...');
+      return;
+    }
+
+    console.log('Setting filter to', text);
+    this._filter = TaggableFilterFactory.buildFilter(text);
+    this._filterText = text;
+    this.updateFilteredTaggables();
+
+    // capture the query in the url parameters
+    this.router.navigate([], {queryParams:{q:text}});
   }
 
   getFilteredTaggableByType(type:TaggableType, filter:TaggableFilter):Taggable[] {
@@ -129,11 +146,7 @@ export class TagService {
         return a.compareTo(b);
       });
       console.log('Sorted all taggables');
-      this._filteredTaggables = this._taggables;
-      this._filteredByTypes = [];
-      if (this._observer) {
-        this._observer.next(this._filteredTaggables);
-      }
+      this.updateFilteredTaggables();
     }).catch((err) => {
       console.log(err);
     });
@@ -171,7 +184,6 @@ export class TagService {
   getTags(): Observable<string[]> {
     return <Observable<string[]>>Observable.fromPromise(this._tagsDb.allDocs({ include_docs: true})
       .then((docs:any) => {
-        console.log('Found', docs.rows, 'tags');
         return docs.rows.map((row:any) => row.doc._id);
       })
       .catch(this.handleError));

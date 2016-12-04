@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef  } from '@angular/core';
+import { Component, OnInit  } from '@angular/core';
 import { TagService, Taggable, TaggableType, TaggableFilterFactory, Region } from '../index';
 
 export class TaggableViewerComponent implements OnInit {
@@ -12,7 +12,7 @@ export class TaggableViewerComponent implements OnInit {
   /**
    * @param {TagService} tagService - The injected TagService.
    */
-  constructor(public tagService: TagService, public cd: ChangeDetectorRef) {}
+  constructor(public tagService: TagService) {}
 
   /**
    * Get the names OnInit

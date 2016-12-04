@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { TagService, Taggable, TaggableType, TaggableViewerComponent,
   StatusFilter, RegionFilter, NotFilter, CompoundFilter } from '../shared/index';
 import {nvD3} from 'ng2-nvd3'
@@ -44,8 +44,8 @@ export class DashboardComponent extends TaggableViewerComponent implements OnIni
     memory: 0
   };
 
-  constructor(public tagService: TagService, cd: ChangeDetectorRef) {
-    super(tagService, cd);
+  constructor(public tagService: TagService) {
+    super(tagService);
   }
 
   ngOnInit(){
