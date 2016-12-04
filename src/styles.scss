@@ -1,0 +1,86 @@
+/* You can add global styles to this file, and also import other style files */
+/*@import '~@angular/material/core/theming/prebuilt/indigo-pink.css';*/
+/*@import './myconsole-theme.scss';*/
+@import url(//fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic);
+@import url(//fonts.googleapis.com/icon?family=Material+Icons);
+@import url(//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css);
+
+@import './assets/angular-material.css';
+@import '../node_modules/flag-icon-css/css/flag-icon.min.css';
+
+/*deeppurple-amber
+indigo-pink
+pink-bluegrey
+purple-green*/
+
+body {
+  margin: 0px;
+  background-color: #f2f2f2;
+  min-width: 900px;
+}
+
+/************
+ * Defaults
+ ************/
+button,
+select,
+html,
+textarea,
+input {
+  font-family: "Helvetica Neue", sans-serif; }
+
+select,
+button,
+textarea,
+input {
+  font-size: 100%; }
+
+footer {
+  text-align: center;
+  padding: 12px;
+}
+
+/************
+ * Headings
+ ************/
+.md-display-4 {
+  font-size: 112px;
+  font-weight: 300;
+  letter-spacing: -0.010em;
+  line-height: 112px; }
+
+.md-display-3 {
+  font-size: 56px;
+  font-weight: 400;
+  letter-spacing: -0.005em;
+  line-height: 56px; }
+
+.md-display-2 {
+  font-size: 45px;
+  font-weight: 400;
+  line-height: 64px; }
+
+.md-display-1 {
+  font-size: 34px;
+  font-weight: 400;
+  line-height: 40px; }
+
+.md-headline {
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 32px; }
+
+.md-title {
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: 0.005em; }
+
+.md-subhead {
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: 0.010em;
+  line-height: 24px; }
+
+.md-list-scrollable {
+  overflow-y: scroll;
+}

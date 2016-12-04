@@ -1,0 +1,22 @@
+<md-slide-toggle [(ngModel)]="editable">Edit Tags</md-slide-toggle>
+
+<div *ngFor="let currentType of getTaggableTypes()">
+  <ul class="taggable-list-header">
+    <li *ngFor="let type of getTaggableTypes()">
+      <a class="taggable-list-header-item " *ngIf="type != currentType" href="#{{type.plural}}">{{type.plural}}</a>
+      <a class="taggable-list-header-item taggable-list-header-item-current" *ngIf="type == currentType" name="{{type.plural}}">{{type.plural}}</a>
+    </li>
+  </ul>
+  <md-card class="taggable-list">
+    <md-list dense>
+      <md-list-item *ngIf="getTaggableByType(currentType).length == 0" class="taggable-list-item">
+        <span>No {{currentType.display}}</span>
+      </md-list-item>
+      <sd-taggable class="taggable" *ngFor="let taggable of getTaggableByType(currentType)"
+        [taggable]="taggable"
+        [availableTags]="availableTags"
+        [editable]="editable">
+      </sd-taggable>
+    </md-list>
+  </md-card>
+</div>

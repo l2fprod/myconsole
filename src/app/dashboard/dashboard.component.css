@@ -1,0 +1,28 @@
+.box {
+  overflow: hidden;
+}
+
+.number-icon {
+  position: absolute;
+  right: 12px;
+  top: 0;
+  font-size: 200px;
+}
+
+.number-icon i {
+  font-size: 200px !important;
+}
+
+.number-value {
+  position: relative;
+  font-size: 60px;
+}
+
+.number-description {
+  position: relative;
+  font-size: 24px;
+}
+
+.chart-title {
+  font-size: 24px;
+}

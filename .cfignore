@@ -1,0 +1,11 @@
+node_modules
+src
+e2e
+.*
+*.md
+local-nginx.conf
+karma.conf.js
+angular-cli.json
+package.json
+runproxy.sh
+tslint.json

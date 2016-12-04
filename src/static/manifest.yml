@@ -1,0 +1,5 @@
+applications:
+- name: myconsole
+  host: myconsole
+  buildpack: https://github.com/cloudfoundry/staticfile-buildpack.git
+  memory: 64M

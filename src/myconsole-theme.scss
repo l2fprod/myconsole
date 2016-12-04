@@ -1,0 +1,185 @@
+@import '~@angular/material/core/theming/all-theme';
+// Plus imports for other components in your app.
+
+// Include the base styles for Angular Material core. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+@include md-core();
+
+$myconsole-blue: (
+  50:rgb(244, 252, 253),
+  100: rgb(178, 232, 242),
+  200: rgb(130, 217, 234),
+  300: rgb(69, 199, 224),
+  400: rgb(43, 191, 220),
+  500: rgb(33, 172, 199),
+  600: rgb(29, 149, 173),
+  700: rgb(24, 127, 147),
+  800: rgb(20, 104, 120),
+  900: rgb(16, 81, 94),
+  A100: rgb(244, 252, 253),
+  A200: rgb(178, 232, 242),
+  A400: rgb(43, 191, 220),
+  A700:rgb(24, 127, 147),
+  contrast: (
+    0: $black-87-opacity,
+    50: $black-87-opacity,
+    100: $black-87-opacity,
+    200: $black-87-opacity,
+    300: $black-87-opacity,
+    400: $black-87-opacity,
+    500: $black-87-opacity,
+    600: $white-87-opacity,
+    700: $white-87-opacity,
+    800: $white-87-opacity,
+    900: $white-87-opacity,
+    1000: $white-87-opacity,
+    A100: $black-87-opacity,
+    A200: $black-87-opacity,
+    A400: $black-87-opacity,
+    A700: $white-87-opacity,
+  )
+);
+
+$myconsole-green: (
+  50: rgb(247, 248, 242),
+  100: rgb(217, 222, 192),
+  200: rgb(195, 202, 155),
+  300: rgb(167, 177, 109),
+  400: rgb(155, 167, 89),
+  500: rgb(137, 147, 78),
+  600: rgb(118, 127, 67),
+  700: rgb(100, 107, 57),
+  800: rgb(81, 87, 46),
+  900: rgb(62, 67, 36),
+  A100: rgb(247, 248, 242),
+  A200: rgb(217, 222, 192),
+  A400: rgb(155, 167, 89),
+  A700: rgb(100, 107, 57),
+  contrast: (
+    0: $black-87-opacity,
+    50: $black-87-opacity,
+    100: $black-87-opacity,
+    200: $black-87-opacity,
+    300: $black-87-opacity,
+    400: $black-87-opacity,
+    500: $black-87-opacity,
+    600: $white-87-opacity,
+    700: $white-87-opacity,
+    800: $white-87-opacity,
+    900: $white-87-opacity,
+    1000: $white-87-opacity,
+    A100: $black-87-opacity,
+    A200: $black-87-opacity,
+    A400: $black-87-opacity,
+    A700: $white-87-opacity,
+  )
+);
+
+$myconsole-orange: (
+  50: rgb(255, 253, 251),
+  100: rgb(251, 210, 179),
+  200: rgb(248, 179, 126),
+  300: rgb(244, 139, 58),
+  400: rgb(242, 122, 29),
+  500: rgb(228, 107, 13),
+  600: rgb(199, 93, 11),
+  700: rgb(170, 80, 10),
+  800: rgb(141, 66, 8),
+  900: rgb(112, 53, 6),
+  A100: rgb(255, 253, 251),
+  A200: rgb(251, 210, 179),
+  A400: rgb(242, 122, 29),
+  A700: rgb(170, 80, 10),
+  contrast: (
+    0: $black-87-opacity,
+    50: $black-87-opacity,
+    100: $black-87-opacity,
+    200: $black-87-opacity,
+    300: $black-87-opacity,
+    400: $black-87-opacity,
+    500: $black-87-opacity,
+    600: $white-87-opacity,
+    700: $white-87-opacity,
+    800: $white-87-opacity,
+    900: $white-87-opacity,
+    1000: $white-87-opacity,
+    A100: $black-87-opacity,
+    A200: $black-87-opacity,
+    A400: $black-87-opacity,
+    A700: $white-87-opacity,
+  )
+);
+
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue.
+$primary: md-palette($md-cyan, 500, A100, A400);
+$accent:  md-palette($md-pink, 500, 300, 900);
+
+// The warn palette is optional (defaults to red).
+$warn:    md-palette($md-red);
+
+// Create the theme object (a Sass map containing all of the palettes).
+$theme: md-light-theme($primary, $accent, $warn);
+
+.search {
+  color: white;
+  background-color: md-color($md-cyan, 400);
+}
+
+::-webkit-input-placeholder {
+  color: white;
+}
+
+.nvd3.nv-pie .nv-pie-title {
+  fill: #999999 !important;
+}
+
+.number-icon {
+  color: #EFEFEF;
+}
+
+.number-value {
+  color: #999999;
+}
+
+.number-description {
+  color: #999999;
+}
+
+.chart-title {
+  color: #999999;
+}
+
+.taggable-organization {
+  background-color: #003C7F;
+}
+
+.taggable-space {
+  background-color: #4CA1FF;
+}
+
+.taggable-app {
+  background-color: #0079FF;
+}
+
+.taggable-service {
+  background-color: #3D5C7F;
+}
+
+.status {
+  color: white;
+}
+
+.status-STARTED {
+  background-color: rgb(69, 181, 97);
+}
+
+.status-STOPPED {
+  background-color: rgb(187, 86, 89);
+}
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include angular-material-theme($theme);

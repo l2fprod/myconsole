@@ -1,0 +1,23 @@
+:host {
+  min-height: 400px !important;
+}
+
+.browser-orgs-and-spaces {
+  height: 200px;
+  min-height: 200px !important;
+}
+
+.browser-box-title {
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 14px;
+  font-weight: bold;
+  margin: 8px;
+}
+
+.browser-box {
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding: 0px;
+  margin: 8px;
+}

@@ -1,0 +1,40 @@
+<div class="layout-row">
+  <md-card class="flex box" *ngFor="let currentType of getTaggableTypes()">
+    <div class="number-icon">
+      <span class="fa fa-{{currentType.icon}}"></span>
+    </div>
+    <div class="number-value">
+      {{getTaggableByType(currentType).length}}
+    </div>
+    <div class="number-description">
+      {{currentType.plural}}
+    </div>
+  </md-card>
+  <md-card class="flex box">
+    <div class="number-icon">
+      <i class="material-icons">memory</i>
+    </div>
+    <div class="number-value">
+      {{(totalMemory/1024).toFixed(1)}}GB
+    </div>
+    <div class="number-description">
+      Memory
+    </div>
+  </md-card>
+</div>
+
+<div class="layout-row">
+  <md-card class="flex box">
+    <div class="chart-title">
+      Application Status
+    </div>
+    <nvd3 deepWatchData="true" [options]="appStatusOptions" [data]="appStatusData"></nvd3>
+  </md-card>
+
+  <md-card class="flex box">
+    <div class="chart-title">
+      Applications by Region
+    </div>
+    <nvd3 [options]="appSplitOptions" [data]="appSplitData"></nvd3>
+  </md-card>
+</div>

@@ -1,0 +1,54 @@
+:host {
+}
+
+.card-title {
+  font-size: 16px;
+  line-height: 20px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.card-subtitle {
+  font-size: 10px;
+}
+
+.status {
+  margin: 4px;
+  border-radius: 10px;
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  min-height: 20px;
+  text-align: center;
+  line-height: 20px;
+  font-size: 12px;
+}
+
+:host >>> .ng2-tag {
+  font-size: 13px;
+  line-height: 24px;
+  height: 24px;
+  background: rgb(29, 149, 173);
+  color: white;
+}
+
+:host >>> .ng2-tag_name {
+  font-size: 13px;
+}
+
+:host >>> .ng2-tag__remove-button {
+  font-size: 12px;
+  line-height: 24px;
+  height: 14px;
+  width: 12px;
+}
+
+:host >>> .ng2-tag-input__text-input {
+  font-size: 13px;
+  height: 27px;
+}
+
+:host >>> .ng2-tag-input.default {
+  border: none;
+}

@@ -1,0 +1,54 @@
+<div class="layout-column flex">
+  <div class="layout-row browser-orgs-and-spaces">
+    <div class="layout-column flex-50">
+      <div class="browser-box-title">Organizations ({{getOrganizations().length}})</div>
+      <md-card class="browser-box flex">
+        <md-list class="flex" dense>
+          <sd-taggable class="taggable" *ngFor="let taggable of getOrganizations()"
+            [taggable]="taggable"
+            [availableTags]="availableTags"
+            [editable]="editable">
+          </sd-taggable>
+        </md-list>
+      </md-card>
+    </div>
+    <div class="layout-column flex-50">
+      <div class="browser-box-title">Spaces ({{getSpaces().length}})</div>
+      <md-card class="browser-box flex">
+        <md-list class="flex" dense>
+          <sd-taggable class="taggable" *ngFor="let taggable of getSpaces()"
+            [taggable]="taggable"
+            [availableTags]="availableTags"
+            [editable]="editable">
+          </sd-taggable>
+        </md-list>
+      </md-card>
+    </div>
+  </div>
+  <div class="layout-row flex">
+    <div class="layout-column flex-50">
+      <div class="browser-box-title">Applications ({{getApplications().length}})</div>
+      <md-card class="browser-box flex">
+        <md-list class="flex" dense>
+          <sd-taggable class="taggable" *ngFor="let taggable of getApplications()"
+            [taggable]="taggable"
+            [availableTags]="availableTags"
+            [editable]="editable">
+          </sd-taggable>
+        </md-list>
+      </md-card>
+    </div>
+    <div class="layout-column flex-50">
+      <div class="browser-box-title">Services ({{getServices().length}})</div>
+      <md-card class="browser-box flex">
+        <md-list class="flex" dense>
+          <sd-taggable class="taggable" *ngFor="let taggable of getServices()"
+            [taggable]="taggable"
+            [availableTags]="availableTags"
+            [editable]="editable">
+          </sd-taggable>
+        </md-list>
+      </md-card>
+    </div>
+  </div>
+</div>
