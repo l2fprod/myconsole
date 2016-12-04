@@ -84,3 +84,7 @@ footer {
 .md-list-scrollable {
   overflow-y: scroll;
 }
+
+md-card > md-card-actions:last-child {
+  margin-bottom: inherit !important;
+}

@@ -7,7 +7,6 @@ import { ActivatedRoute } from '@angular/router';
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.css']
 })
-
 export class AppComponent {
 
   searchText:string;
@@ -24,12 +23,12 @@ export class AppComponent {
     });
   }
 
-  filterTaggables(text:string) {
-    this.tagService.filterTaggables(text);
+  hasToken() {
+    return this.tagService.token != null;
   }
 
-  setToken(token:string) {
-    this.tagService.setToken(token);
+  filterTaggables(text:string) {
+    this.tagService.filterTaggables(text);
   }
 
   refreshApps() {

@@ -1,0 +1,36 @@
+<div class="settings flex-80">
+  <md-card>
+    <md-card-content>
+      <div>
+        Run <code>cf oauth-token</code> on the command line then copy then paste the output over here:
+      </div>
+      <div>
+        <textarea class="flex" type="text" id="token" #token>{{getToken()}}</textarea>
+      </div>
+    </md-card-content>
+    <md-card-actions align="end">
+      <button md-raised-button color="primary" (click)="setToken(token.value);">Apply</button>
+    </md-card-actions>
+    <md-card-content *ngIf="decodedToken">
+      <h2>Inside the token</h2>
+      <table style="width: 100%" cellspacing="0">
+        <tr>
+          <td>
+            <md-input class="decoded-value" placeholder="User name" disabled value="{{decodedToken.user_name}}"></md-input>
+          </td>
+          <td>
+            <md-input class="decoded-value" placeholder="Email" disabled value="{{decodedToken.email}}"></md-input>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <md-input class="decoded-value" placeholder="Issued at" disabled value="{{decodedToken.iat}}"></md-input>
+          </td>
+          <td>
+            <md-input class="decoded-value" placeholder="Expires at" disabled value="{{decodedToken.exp}}"></md-input>
+          </td>
+        </tr>
+      </table>
+    </md-card-content>
+  </md-card>
+</div>

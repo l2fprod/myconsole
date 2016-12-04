@@ -22,7 +22,7 @@ export class TagService {
   private _observable:Observable<Taggable[]>;
   private _observer: Observer<Taggable[]>;
 
-  private token: string;
+  public token: string;
 
   private _taggablesDb: any;
   private _tagsDb: any;

@@ -137,7 +137,7 @@ $theme: md-light-theme($primary, $accent, $warn);
   background-color: md-color($md-cyan, 400);
 }
 
-::-webkit-input-placeholder {
+.search::-webkit-input-placeholder {
   color: white;
 }
 

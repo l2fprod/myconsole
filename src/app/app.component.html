@@ -9,11 +9,17 @@
     <input class="search" [ngModel]="searchText"
       placeholder="Search" #search (change)='filterTaggables(search.value);' autofocus />
 
-    <span>
-      <input type="text" id="token" #token (change)="setToken(token.value);"
-        placeholder="cf oauth-token here..." />
+    <span *ngIf="!hasToken()">
+      <a md-raised-button color="warn" routerLink="/settings" preserveQueryParams preserveFragment>
+        No token set!
+      </a>
+    </span>
+    <span *ngIf="hasToken()">
       <button md-raised-button color="accent" (click)="refreshAll();">Refresh All</button>
       <button md-raised-button color="accent" (click)="refreshApps();">Refresh Apps</button>
+    </span>
+
+    <span>
       <a md-icon-button href="https://github.com/l2fprod/myconsole">
         <md-icon class="toolbar-icon" svgSrc="/assets/github-circle.svg"></md-icon>
       </a>
@@ -30,7 +36,7 @@
       <a md-icon-button routerLink="/browse" preserveQueryParams preserveFragment [routerLinkActive]="['is-active']"><md-icon svgSrc="/assets/view-grid.svg"></md-icon></a>
       <a md-icon-button routerLink="/list" preserveQueryParams preserveFragment [routerLinkActive]="['is-active']"><md-icon svgSrc="/assets/view-list.svg"></md-icon></a>
       <span class="flex"></span>
-      <button md-icon-button><md-icon svgSrc="/assets/settings.svg"></md-icon></button>
+      <a md-icon-button routerLink="/settings" preserveQueryParams preserveFragment [routerLinkActive]="['is-active']"><md-icon svgSrc="/assets/settings.svg"></md-icon></a>
     </div>
     <div class="app-content flex layout-column">
       <router-outlet></router-outlet>

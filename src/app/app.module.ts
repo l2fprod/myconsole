@@ -11,11 +11,12 @@ import { routes } from './app.routes';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { BrowserModule as MyConsoleBrowserModule } from './browser/browser.module';
 import { ListViewModule } from './listview/listview.module';
+import { SettingsModule } from './settings/settings.module';
 import { SharedModule } from './shared/shared.module';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     BrowserModule,
@@ -28,6 +29,7 @@ import { SharedModule } from './shared/shared.module';
     DashboardModule,
     ListViewModule,
     MyConsoleBrowserModule,
+    SettingsModule,
   ],
   exports: [],
   providers: [],
