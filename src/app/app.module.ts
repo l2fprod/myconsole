@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { MaterialModule } from '@angular/material';
 import { RouterModule } from '@angular/router';
+import { Angulartics2Module, Angulartics2GoogleAnalytics } from 'angulartics2';
 
 import { AppComponent } from './app.component';
 import { routes } from './app.routes';
@@ -30,6 +31,7 @@ import { SharedModule } from './shared/shared.module';
     ListViewModule,
     MyConsoleBrowserModule,
     SettingsModule,
+    Angulartics2Module.forRoot([ Angulartics2GoogleAnalytics ]),
   ],
   exports: [],
   providers: [],

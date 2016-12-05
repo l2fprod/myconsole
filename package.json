@@ -23,6 +23,7 @@
     "@angular/platform-browser-dynamic": "2.2.4",
     "@angular/router": "3.2.4",
     "angular2-jwt": "^0.1.25",
+    "angulartics2": "^1.5.2",
     "core-js": "^2.4.1",
     "flag-icon-css": "^2.8.0",
     "hammerjs": "^2.0.8",
