@@ -14,26 +14,12 @@ export class Taggable {
   target: any; // the app, org, space object with useful data to display
   region: string;
   links: Taggable[] = [];
+  children: Taggable[][] = [];
 
   resolveLinks(service:TagService) {
     if (!this.target) {
       console.log(this._id, 'has no target');
       return;
-    }
-
-    if ('service_instance' === this.type) {
-      this.links['space'] = service.getTaggable(this.target.entity.space_guid);
-      this.links['service_plan'] = service.getTaggable(this.target.entity.service_plan_guid);
-      // plan guid can be null for service instances using an old plan
-      if (this.links['service_plan']) {
-        this.links['service'] = service.getTaggable(this.links['service_plan'].target.entity.service_guid);
-      }
-      this.links['org'] = service.getTaggable(this.links['space'].target.entity.organization_guid);
-    } else if ('app' === this.type) {
-      this.links['space'] = service.getTaggable(this.target.entity.space_guid);
-      this.links['org'] = service.getTaggable(this.links['space'].target.entity.organization_guid);
-    } else if ('space' === this.type) {
-      this.links['org'] = service.getTaggable(this.target.entity.organization_guid);
     }
   }
 
@@ -41,6 +27,7 @@ export class Taggable {
   static TYPE_SPACE = new TaggableType('space', 'Space', 'Spaces', 'folder');
   static TYPE_APPLICATION = new TaggableType('app', 'Application', 'Applications', 'rocket');
   static TYPE_SERVICE_INSTANCE = new TaggableType('service_instance', 'Service', 'Services', 'cloud');
+  protected static TYPE_SERVICE = new TaggableType('service', 'Service', 'Services', null);
 
   static TYPES: TaggableType[] = [
     Taggable.TYPE_ORGANIZATION,
@@ -48,7 +35,6 @@ export class Taggable {
     Taggable.TYPE_APPLICATION,
     Taggable.TYPE_SERVICE_INSTANCE
     //new TaggableType('plan', 'Plan', 'Plans')
-    //new TaggableType('service', 'Service', 'Services')
   ];
 
   static fromDoc(doc:any):Taggable {
@@ -63,11 +49,18 @@ export class Taggable {
   }
 
   static newTaggable(_id: string, type: string, tags: string[], target: any, region: string) {
-    if (type === 'space') {
-      return new Space(_id, type, tags, target, region);
-    } else if (type === 'service') {
-      return new Service(_id, type, tags, target, region);
-    } else {
+    switch(type) {
+      case Taggable.TYPE_ORGANIZATION.name:
+        return new Organization(_id, tags, target, region);
+      case Taggable.TYPE_SPACE.name:
+        return new Space(_id, tags, target, region);
+      case Taggable.TYPE_APPLICATION.name:
+        return new Application(_id, tags, target, region);
+      case Taggable.TYPE_SERVICE_INSTANCE.name:
+        return new ServiceInstance(_id, tags, target, region);
+      case Taggable.TYPE_SERVICE.name:
+        return new Service(_id, tags, target, region);
+    default:
       return new Taggable(_id, type, tags, target, region);
     }
   }
@@ -84,6 +77,10 @@ export class Taggable {
     return this.target.entity.name;
   }
 
+  getTargetUrl() {
+    return null;
+  }
+
   compareTo(other:Taggable):number {
     return this.getName().localeCompare(other.getName());
   }
@@ -93,17 +90,67 @@ export class Taggable {
   }
 }
 
+class Organization extends Taggable {
+  constructor(_id: string, tags: string[], target: any, region: string) {
+    super(_id, Taggable.TYPE_ORGANIZATION.name, tags, target, region);
+    this.children['spaces'] = [];
+  }
+  resolveLinks(service:TagService) {
+  }
+}
+
+class Space extends Taggable {
+  constructor(_id: string, tags: string[], target: any, region: string) {
+    super(_id, Taggable.TYPE_SPACE.name, tags, target, region);
+    this.children['apps'] = [];
+    this.children['services'] = [];
+  }
+  resolveLinks(service:TagService) {
+    this.links['org'] = service.getTaggable(this.target.entity.organization_guid);
+    this.links['org'].children['spaces'].push(this);
+  }
+}
+
+class Application extends Taggable {
+  constructor(_id: string, tags: string[], target: any, region: string) {
+    super(_id, Taggable.TYPE_APPLICATION.name, tags, target, region);
+  }
+  resolveLinks(service:TagService) {
+    this.links['space'] = service.getTaggable(this.target.entity.space_guid);
+    this.links['space'].children['apps'].push(this);
+    this.links['org'] = service.getTaggable(this.links['space'].target.entity.organization_guid);
+  }
+
+  getTargetUrl() {
+    return `https://console.${this.region}.bluemix.net/apps/${this.target.metadata.guid}`;
+  }
+}
+
 class Service extends Taggable {
-  constructor(_id: string, type: string, tags: string[], target: any, region: string) {
-    super(_id, type, tags, target, region);
+  constructor(_id: string, tags: string[], target: any, region: string) {
+    super(_id, Taggable.TYPE_SERVICE.name, tags, target, region);
+  }
+  resolveLinks(service:TagService) {
   }
   getName():string {
     return this.target.entity.label;
   }
 }
 
-class Space extends Taggable {
-  constructor(_id: string, type: string, tags: string[], target: any, region: string) {
-    super(_id, type, tags, target, region);
+class ServiceInstance extends Taggable {
+  constructor(_id: string, tags: string[], target: any, region: string) {
+    super(_id, Taggable.TYPE_SERVICE_INSTANCE.name, tags, target, region);
+  }
+  resolveLinks(service:TagService) {
+    this.links['space'] = service.getTaggable(this.target.entity.space_guid);
+    this.links['space'].children['services'].push(this);
+    this.links['org'] = service.getTaggable(this.links['space'].target.entity.organization_guid);
+    this.links['service_plan'] = service.getTaggable(this.target.entity.service_plan_guid);
+    if (this.links['service_plan']) {
+      this.links['service'] = service.getTaggable(this.links['service_plan'].target.entity.service_guid);
+    }
+  }
+  getTargetUrl() {
+    return `https://console.${this.region}.bluemix.net/services/${this.target.metadata.guid}`;
   }
 }

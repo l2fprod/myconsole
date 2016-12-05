@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { TagService } from '../shared/index';
+import { Component, ChangeDetectorRef } from '@angular/core';
+import { TagService, TaggableViewerComponent } from '../shared/index';
 import { JwtHelper } from 'angular2-jwt';
 
 @Component({
@@ -7,12 +7,14 @@ import { JwtHelper } from 'angular2-jwt';
   templateUrl: 'settings.component.html',
   styleUrls: ['settings.component.css']
 })
-export class SettingsComponent {
+export class SettingsComponent extends TaggableViewerComponent {
 
   jwtHelper: JwtHelper = new JwtHelper();
   decodedToken:any;
 
-  constructor(public tagService: TagService) {
+  constructor(public tagService: TagService, public changeDetectorRef: ChangeDetectorRef) {
+    super(tagService, changeDetectorRef);
+
     try {
       this.decode(tagService.token);
     } catch(err) {}
