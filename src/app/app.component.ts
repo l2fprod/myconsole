@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { TagService } from './shared/index';
 import { ActivatedRoute } from '@angular/router';
+import { Angulartics2GoogleAnalytics } from 'angulartics2';
 
 @Component({
   selector: 'app-root',
@@ -11,7 +12,7 @@ export class AppComponent {
 
   searchText:string;
 
-  constructor(public tagService: TagService, private route: ActivatedRoute) {
+  constructor(public tagService: TagService, private route: ActivatedRoute, private stats: Angulartics2GoogleAnalytics) {
     console.log("App is starting");
   }
 
