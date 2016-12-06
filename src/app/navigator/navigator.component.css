@@ -1,0 +1,23 @@
+:host {
+  min-width: 900px !important;
+}
+
+.orgs-and-spaces {
+  width: 600px;
+  min-width: 600px !important;
+}
+
+.box-title {
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 14px;
+  font-weight: bold;
+  margin: 8px;
+}
+
+.box {
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding: 0px;
+  margin: 8px;
+}

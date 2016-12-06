@@ -16,6 +16,9 @@ export class TaggableComponent {
   @Input() availableTags: string[];
   @Input() editable: boolean;
 
+  @Input() showOrg:boolean = true;
+  @Input() showSpace:boolean = true;
+
   constructor(public tagService: TagService) {
   }
 

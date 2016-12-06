@@ -1,4 +1,4 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { TagService, Taggable, TaggableType, TaggableViewerComponent,
   StatusFilter, RegionFilter, NotFilter, CompoundFilter } from '../shared/index';
 import {nvD3} from 'ng2-nvd3'
@@ -44,8 +44,8 @@ export class DashboardComponent extends TaggableViewerComponent implements OnIni
     memory: 0
   };
 
-  constructor(public tagService: TagService) {
-    super(tagService);
+  constructor(public tagService: TagService, public changeDetectorRef: ChangeDetectorRef) {
+    super(tagService, changeDetectorRef);
   }
 
   ngOnInit(){
@@ -93,12 +93,12 @@ export class DashboardComponent extends TaggableViewerComponent implements OnIni
           children: [
             {
               name: `Up (${region.display})`,
-              value: this.tagService.getFilteredTaggableByType(Taggable.TYPE_APPLICATION,
+              value: this.tagService.getFilteredTaggablesMatchingByType(Taggable.TYPE_APPLICATION,
               new CompoundFilter([ regionFilter, upFilter ])).length
             },
             {
               name: `Down (${region.display})`,
-              value: this.tagService.getFilteredTaggableByType(Taggable.TYPE_APPLICATION,
+              value: this.tagService.getFilteredTaggablesMatchingByType(Taggable.TYPE_APPLICATION,
               new CompoundFilter([ regionFilter, downFilter ])).length
             }
           ]
@@ -117,11 +117,11 @@ export class DashboardComponent extends TaggableViewerComponent implements OnIni
         memory: {},
       };
       Taggable.TYPES.forEach(type => {
-        this.stats[region.name].count[type.name] = this.tagService.getTaggablesMatching(`type:${type.name} region:${region.name}`).length;
+        this.stats[region.name].count[type.name] = this.tagService.getFilteredTaggablesMatching(`type:${type.name} region:${region.name}`).length;
       });
 
       let memoryInThisRegion = 0;
-      this.tagService.getTaggablesMatching(`type:app region:${region.name}`).forEach(
+      this.tagService.getFilteredTaggablesMatching(`type:app region:${region.name}`).forEach(
         taggable => memoryInThisRegion += (taggable.target.entity.memory * taggable.target.entity.instances)
       );
       this.stats.memory += memoryInThisRegion;

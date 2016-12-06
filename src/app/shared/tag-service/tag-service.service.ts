@@ -19,20 +19,19 @@ export class Region {
 @Injectable()
 export class TagService {
 
-  private _observable:Observable<Taggable[]>;
-  private _observer: Observer<Taggable[]>;
-
-  public token: string;
-
   private _taggablesDb: any;
   private _tagsDb: any;
 
   private _taggables:Taggable[] = [];
   private _filteredTaggables:Taggable[] = [];
   private _filteredByTypes: Taggable[][] = [];
-
   private _filter:TaggableFilter = new AcceptAllFilter();
   private _filterText:string = "";
+
+  private _observable:Observable<Taggable[]>;
+  private _observer: Observer<Taggable[]>;
+
+  public token: string;
 
   public static REGIONS = [
     new Region('ng', 'US South', 'us'),
@@ -61,99 +60,6 @@ export class TagService {
 
   asObservable() {
     return this._observable;
-  }
-
-  private updateFilteredTaggables() {
-    this._filteredTaggables = this._taggables.filter(taggable => this._filter.accept(taggable));
-    this._filteredByTypes = [];
-    if (this._observer) {
-      this._observer.next(this._filteredTaggables);
-    }
-  }
-
-  filterTaggables(text:string) {
-    if (text === this._filterText) {
-      console.warn('Filter did not change, ignoring request...');
-      return;
-    }
-
-    console.log('Setting filter to', text);
-    this._filter = TaggableFilterFactory.buildFilter(text);
-    this._filterText = text;
-    this.updateFilteredTaggables();
-
-    // capture the query in the url parameters
-    this.router.navigate([], {queryParams:{q:text}});
-  }
-
-  getFilteredTaggableByType(type:TaggableType, filter:TaggableFilter):Taggable[] {
-    return this.getTaggableByType(type).filter(taggable => filter.accept(taggable));
-  }
-
-  getTaggablesMatching(text:string):Taggable[] {
-    const filter = TaggableFilterFactory.buildFilter(text);
-    return this._filteredTaggables.filter(taggable => filter.accept(taggable));
-  }
-
-  getTaggableByType(type:TaggableType):Taggable[] {
-    if (!this._filteredByTypes[type.name]) {
-      console.log('Filtering by type', type.name);
-      this._filteredByTypes[type.name] = this._filteredTaggables.filter(taggable => (type.name === taggable.type));
-      console.log('Got', this._filteredByTypes[type.name].length, type.plural);
-    }
-    return this._filteredByTypes[type.name];
-  }
-
-  setToken(token:string) {
-    console.log('Setting token to', token);
-    this.token = token;
-  }
-
-  refreshApps() {
-    console.log('Refreshing resources...');
-    TagService.REGIONS.forEach(region => {
-      this.fetchTaggables(region, '/v2/organizations', 'organization');
-      this.fetchTaggables(region, '/v2/spaces', 'space');
-      this.fetchTaggables(region, '/v2/apps', 'app');
-    });
-  }
-
-  refreshAll() {
-    console.log('Refreshing resources...');
-    TagService.REGIONS.forEach(region => {
-      this.fetchTaggables(region, '/v2/organizations', 'organization');
-      this.fetchTaggables(region, '/v2/spaces', 'space');
-      this.fetchTaggables(region, '/v2/apps', 'app');
-      this.fetchTaggables(region, '/v2/service_instances', 'service_instance');
-      this.fetchTaggables(region, '/v2/service_plans', 'service_plan');
-      this.fetchTaggables(region, '/v2/services', 'service');
-    });
-  }
-
-  private loadTaggables() {
-    console.log('Querying db...');
-    this._taggablesDb.find({
-      selector: {
-        type: { $exists: true }
-      }
-    }).then((result: any) => {
-      console.log('Found', result.docs.length, 'taggables');
-      this._taggables = result.docs.map((doc:any) => Taggable.fromDoc(doc));
-      console.log('Mapped all taggables');
-      this._taggables.forEach((taggable: Taggable) => taggable.resolveLinks(this));
-      console.log('Resolved all links');
-      this._taggables.sort((a:Taggable, b:Taggable):number => {
-        return a.compareTo(b);
-      });
-      console.log('Sorted all taggables');
-      this.updateFilteredTaggables();
-    }).catch((err) => {
-      console.log(err);
-    });
-  }
-
-  getTaggables():Taggable[] {
-    return this._filteredTaggables;
   }
 
   getTaggable(guid:string):Taggable {
@@ -189,6 +95,98 @@ export class TagService {
       .catch(this.handleError));
   }
 
+  filterTaggables(text:string) {
+    if (text === this._filterText) {
+      console.warn('Filter did not change, ignoring request...');
+      return;
+    }
+
+    console.log('Setting filter to', text);
+    this._filter = TaggableFilterFactory.buildFilter(text);
+    this._filterText = text;
+    this.updateFilteredTaggables();
+
+    // capture the query in the url parameters
+    this.router.navigate([], {queryParams:{q:text}});
+  }
+
+  getFilteredTaggablesMatchingByType(type:TaggableType, filter:TaggableFilter):Taggable[] {
+    return this.getFilteredTaggablesByType(type).filter(taggable => filter.accept(taggable));
+  }
+
+  getFilteredTaggablesMatching(text:string):Taggable[] {
+    const filter = TaggableFilterFactory.buildFilter(text);
+    return this._filteredTaggables.filter(taggable => filter.accept(taggable));
+  }
+
+  getFilteredTaggablesByType(type:TaggableType):Taggable[] {
+    if (!this._filteredByTypes[type.name]) {
+      console.log('Filtering by type', type.name);
+      this._filteredByTypes[type.name] = this._filteredTaggables.filter(taggable => (type.name === taggable.type));
+      console.log('Got', this._filteredByTypes[type.name].length, type.plural);
+    }
+    return this._filteredByTypes[type.name];
+  }
+
+  getTaggablesByType(type:TaggableType):Taggable[] {
+    return this._taggables.filter(taggable => type.name === taggable.type);
+  }
+
+  setToken(token:string) {
+    console.log('Setting token to', token);
+    this.token = token;
+  }
+
+  refreshApps() {
+    console.log('Refreshing resources...');
+    TagService.REGIONS.forEach(region => {
+      this.fetchTaggables(region, '/v2/organizations', 'organization');
+      this.fetchTaggables(region, '/v2/spaces', 'space');
+      this.fetchTaggables(region, '/v2/apps', 'app');
+    });
+  }
+
+  refreshAll() {
+    console.log('Refreshing resources...');
+    TagService.REGIONS.forEach(region => {
+      this.fetchTaggables(region, '/v2/organizations', 'organization');
+      this.fetchTaggables(region, '/v2/spaces', 'space');
+      this.fetchTaggables(region, '/v2/apps', 'app');
+      this.fetchTaggables(region, '/v2/service_instances', 'service_instance');
+      this.fetchTaggables(region, '/v2/service_plans', 'service_plan');
+      this.fetchTaggables(region, '/v2/services', 'service');
+    });
+  }
+
+  private updateFilteredTaggables() {
+    this._filteredTaggables = this._taggables.filter(taggable => this._filter.accept(taggable));
+    this._filteredByTypes = [];
+    if (this._observer) {
+      this._observer.next(this._filteredTaggables);
+    }
+  }
+
+  private loadTaggables() {
+    console.log('Querying db...');
+    this._taggablesDb.find({
+      selector: {
+        type: { $exists: true }
+      }
+    }).then((result: any) => {
+      console.log('Found', result.docs.length, 'taggables');
+      this._taggables = result.docs.map((doc:any) => Taggable.fromDoc(doc));
+      console.log('Mapped all taggables');
+      this._taggables.sort((a:Taggable, b:Taggable):number => {
+        return a.compareTo(b);
+      });
+      console.log('Sorted all taggables');
+      this._taggables.forEach((taggable: Taggable) => taggable.resolveLinks(this));
+      console.log('Resolved all links');
+      this.updateFilteredTaggables();
+    }).catch((err) => {
+      console.log(err);
+    });
+  }
 
   private fetchTaggables(region: Region, call: string, type: string): any {
     const apiRoot = environment.apiUrl;

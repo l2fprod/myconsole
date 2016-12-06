@@ -1,4 +1,4 @@
-import { Component, OnInit  } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { TagService, Taggable, TaggableType, TaggableFilterFactory, Region } from '../index';
 
 export class TaggableViewerComponent implements OnInit {
@@ -12,7 +12,7 @@ export class TaggableViewerComponent implements OnInit {
   /**
    * @param {TagService} tagService - The injected TagService.
    */
-  constructor(public tagService: TagService) {}
+  constructor(public tagService: TagService, public changeDetectorRef: ChangeDetectorRef) {}
 
   /**
    * Get the names OnInit
@@ -27,6 +27,7 @@ export class TaggableViewerComponent implements OnInit {
 
   onNewTaggables(taggables:Taggable[]) {
     console.log('New taggables!');
+    this.changeDetectorRef.markForCheck();
   }
 
   ngOnDestroy() {
@@ -43,11 +44,11 @@ export class TaggableViewerComponent implements OnInit {
   }
 
   getTaggableByType(type:TaggableType):Taggable[] {
-    return this.tagService.getTaggableByType(type);
+    return this.tagService.getFilteredTaggablesByType(type);
   }
 
   getTaggablesMatching(text:string):Taggable[] {
-    return this.tagService.getTaggablesMatching(text);
+    return this.tagService.getFilteredTaggablesMatching(text);
   }
 
   getAvailableTags() {

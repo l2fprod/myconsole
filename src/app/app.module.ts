@@ -10,6 +10,7 @@ import { AppComponent } from './app.component';
 import { routes } from './app.routes';
 
 import { DashboardModule } from './dashboard/dashboard.module';
+import { NavigatorModule } from './navigator/navigator.module';
 import { BrowserModule as MyConsoleBrowserModule } from './browser/browser.module';
 import { ListViewModule } from './listview/listview.module';
 import { SettingsModule } from './settings/settings.module';
@@ -27,6 +28,7 @@ import { SharedModule } from './shared/shared.module';
     RouterModule.forRoot(routes, { useHash: true }),
     MaterialModule.forRoot(),
     SharedModule.forRoot(),
+    NavigatorModule,
     DashboardModule,
     ListViewModule,
     MyConsoleBrowserModule,

@@ -7,11 +7,16 @@
   <span *ngIf="taggable.region==='ng'" class="flag-icon flag-icon-us"></span>
   <span *ngIf="taggable.region==='eu-gb'" class="flag-icon flag-icon-gb"></span>
   <span *ngIf="taggable.region==='au-syd'" class="flag-icon flag-icon-au"></span>
-
   <span>{{taggable.target.entity.name}}</span>
-  <span *ngIf="taggable.links['space']">(space {{taggable.links['space'].target.entity.name}})</span>
-  <span *ngIf="taggable.links['org']">(org {{taggable.links['org'].target.entity.name}})</span>
-  <span *ngIf="taggable.links['service']">(service {{taggable.links['service'].target.entity.label}})</span>
+
+  <span *ngIf="showSpace && taggable.links['space']">(space {{taggable.links['space'].target.entity.name}})</span>
+  <span *ngIf="showOrg && taggable.links['org']">(org {{taggable.links['org'].target.entity.name}})</span>
+  <span *ngIf="taggable.links['service']">({{taggable.links['service'].target.entity.label}})</span>
+
+  <a *ngIf="taggable.getTargetUrl()" class="taggable-target-url" href="{{taggable.getTargetUrl()}}">
+    <md-icon svgSrc="/assets/link.svg"></md-icon>
+  </a>
+
   <div class='taggable-list'>
     <tag-input class="taggable-list-item-tags"
       [(ngModel)]="taggable.tags"

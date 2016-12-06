@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { TagService, Taggable, TaggableType, TaggableViewerComponent } from '../shared/index';
 
 @Component({
@@ -11,8 +11,8 @@ import { TagService, Taggable, TaggableType, TaggableViewerComponent } from '../
 })
 export class BrowserComponent extends TaggableViewerComponent implements OnInit {
 
-  constructor(public tagService: TagService) {
-    super(tagService);
+  constructor(public tagService: TagService, public changeDetectorRef: ChangeDetectorRef) {
+    super(tagService, changeDetectorRef);
   }
 
   getOrganizations():Taggable[] {

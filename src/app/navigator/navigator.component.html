@@ -1,0 +1,63 @@
+<div class="layout-row flex">
+  <div class="layout-row orgs-and-spaces">
+    <div class="layout-column flex-50">
+      <div class="box-title">Organizations ({{getOrganizations().length}})</div>
+      <md-card class="box flex">
+        <md-list class="flex" dense>
+          <sd-taggable class="taggable" [ngClass]="{'is-selected': selectedOrganization===taggable}"
+            *ngFor="let taggable of getOrganizations()"
+            (click)="selectOrganization(taggable);"
+            [taggable]="taggable"
+            [availableTags]="availableTags"
+            [editable]="editable">
+          </sd-taggable>
+        </md-list>
+      </md-card>
+    </div>
+    <div class="layout-column flex-50">
+      <div class="box-title">Spaces ({{selectedOrganization ? selectedOrganization.children['spaces'].length : 0}})</div>
+      <md-card class="box flex">
+        <md-list class="flex" dense *ngIf="selectedOrganization">
+          <sd-taggable class="taggable" [ngClass]="{'is-selected': selectedSpace===taggable}"
+            *ngFor="let taggable of selectedOrganization.children['spaces']"
+            (click)="selectSpace(taggable);"
+            [showOrg]="false"
+            [taggable]="taggable"
+            [availableTags]="availableTags"
+            [editable]="editable">
+          </sd-taggable>
+        </md-list>
+      </md-card>
+    </div>
+  </div>
+  <div class="layout-column flex">
+    <div class="layout-column flex-50">
+      <div class="box-title">Applications ({{selectedSpace ? selectedSpace.children['apps'].length : 0}})</div>
+      <md-card class="box flex">
+        <md-list class="flex" dense *ngIf="selectedSpace">
+          <sd-taggable class="taggable" *ngFor="let taggable of selectedSpace.children['apps']"
+            [showOrg]="false"
+            [showSpace]="false"
+            [taggable]="taggable"
+            [availableTags]="availableTags"
+            [editable]="editable">
+          </sd-taggable>
+        </md-list>
+      </md-card>
+    </div>
+    <div class="layout-column flex-50">
+      <div class="box-title">Services ({{selectedSpace ? selectedSpace.children['services'].length : 0}})</div>
+      <md-card class="box flex">
+        <md-list class="flex" dense *ngIf="selectedSpace">
+          <sd-taggable class="taggable" *ngFor="let taggable of selectedSpace.children['services']"
+            [showOrg]="false"
+            [showSpace]="false"
+            [taggable]="taggable"
+            [availableTags]="availableTags"
+            [editable]="editable">
+          </sd-taggable>
+        </md-list>
+      </md-card>
+    </div>
+  </div>
+</div>
