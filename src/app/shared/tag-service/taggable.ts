@@ -85,7 +85,12 @@ export class Taggable {
   }
 
   compareTo(other:Taggable):number {
-    return this.getName().localeCompare(other.getName());
+    try {
+      return this.getName().localeCompare(other.getName(), [], { sensitivity: 'base' });
+    } catch (err) {
+      console.log(this._id, err);
+      return -1;
+    }
   }
 
   toString():string {
