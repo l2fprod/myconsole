@@ -77,7 +77,7 @@ export class Taggable {
     return this.target.entity.name;
   }
 
-  getTargetUrl() {
+  getTargetUrl():string {
     return null;
   }
 
@@ -102,6 +102,9 @@ class Organization extends Taggable {
   }
   resolveLinks(service:TagService) {
   }
+  getTargetUrl():string {
+    return `https://console.${this.region}.bluemix.net/dashboard/apps/?orgName=${encodeURIComponent(this.target.entity.name)}`;
+  }
 }
 
 class Space extends Taggable {
@@ -113,6 +116,10 @@ class Space extends Taggable {
   resolveLinks(service:TagService) {
     this.links['org'] = service.getTaggable(this.target.entity.organization_guid);
     this.links['org'].children['spaces'].push(this);
+  }
+
+  getTargetUrl():string {
+    return `https://console.${this.region}.bluemix.net/dashboard/apps/?orgName=${encodeURIComponent(this.links['org'].target.entity.name)}&spaceName=${encodeURIComponent(this.target.entity.name)}`;
   }
 }
 
@@ -126,7 +133,7 @@ class Application extends Taggable {
     this.links['org'] = service.getTaggable(this.links['space'].target.entity.organization_guid);
   }
 
-  getTargetUrl() {
+  getTargetUrl():string {
     return `https://console.${this.region}.bluemix.net/apps/${this.target.metadata.guid}`;
   }
 }
@@ -155,7 +162,7 @@ class ServiceInstance extends Taggable {
       this.links['service'] = service.getTaggable(this.links['service_plan'].target.entity.service_guid);
     }
   }
-  getTargetUrl() {
+  getTargetUrl():string {
     return `https://console.${this.region}.bluemix.net/services/${this.target.metadata.guid}`;
   }
 }
