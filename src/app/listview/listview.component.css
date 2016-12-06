@@ -1,9 +1,5 @@
-.taggable-list {
-  min-width: 500px;
-  padding-left: 12px;
-  padding-top: 6px;
-  padding-right: 12px;
-  padding-bottom: 6px;
+.toggle-editable {
+  margin-left: 20px;
 }
 
 .taggable-list-header {
@@ -16,26 +12,10 @@
   display: inline-block;
   margin-right: 8px;
   line-height: 24px;
-  font-size: 80%;
 }
 
 .taggable-list-header-item {
 }
 
 .taggable-list-header-item-current {
-}
-
-:host >>> .taggable-list {
-  display: flex;
-}
-
-:host >>> .taggable-list-item .md-list-item {
-  display: flex;
-}
-
-.taggable-list-item-name {
-}
-
-:host >>> .taggable-list-item-tags {
-  margin-left: auto;
 }

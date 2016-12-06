@@ -1,30 +1,39 @@
 <md-list-item class="taggable-list-item">
-  <!-- <md-checkbox class="taggable-list-item-name">
-  </md-checkbox> -->
-  <md-icon *ngIf="'STARTED'===taggable.target.entity.state" class="status status-STARTED" fontSet="fa" fontIcon="fa-play"></md-icon>
-  <md-icon *ngIf="'STOPPED'===taggable.target.entity.state" class="status status-STOPPED" fontSet="fa" fontIcon="fa-stop"></md-icon>
+  <!-- <md-icon md-list-avatar *ngIf="'STARTED'===taggable.target.entity.state" class="status status-STARTED" fontSet="fa" fontIcon="fa-play"></md-icon>
+  <md-icon md-list-avatar *ngIf="'STOPPED'===taggable.target.entity.state" class="status status-STOPPED" fontSet="fa" fontIcon="fa-stop"></md-icon> -->
+  <div class="layout-row layout-fill">
+    <span *ngIf="taggable.region==='ng'" class="taggable-flag flag-icon flag-icon-us"></span>
+    <span *ngIf="taggable.region==='eu-gb'" class="taggable-flag flag-icon flag-icon-gb"></span>
+    <span *ngIf="taggable.region==='au-syd'" class="taggable-flag flag-icon flag-icon-au"></span>
 
-  <span *ngIf="taggable.region==='ng'" class="flag-icon flag-icon-us"></span>
-  <span *ngIf="taggable.region==='eu-gb'" class="flag-icon flag-icon-gb"></span>
-  <span *ngIf="taggable.region==='au-syd'" class="flag-icon flag-icon-au"></span>
-  <span>{{taggable.target.entity.name}}</span>
+    <md-icon
+      *ngIf="taggable.type==='app'"
+      [ngClass]="{'status-STARTED': 'STARTED'===taggable.target.entity.state, 'status-STOPPED': 'STOPPED'===taggable.target.entity.state}"
+      class="status" fontSet="fa" fontIcon="fa-{{taggable.getType().icon}}"></md-icon>
 
-  <span *ngIf="showSpace && taggable.links['space']">(space {{taggable.links['space'].target.entity.name}})</span>
-  <span *ngIf="showOrg && taggable.links['org']">(org {{taggable.links['org'].target.entity.name}})</span>
-  <span *ngIf="taggable.links['service']">({{taggable.links['service'].target.entity.label}})</span>
+    <span class="taggable-name" [ngClass]="{flex: !editable}" title="{{taggable.target.entity.name}}">{{taggable.target.entity.name}}</span>
 
-  <a *ngIf="taggable.getTargetUrl()" class="taggable-target-url" href="{{taggable.getTargetUrl()}}">
-    <md-icon svgSrc="/assets/link.svg"></md-icon>
-  </a>
+    <p>
+      <span *ngIf="showSpace && taggable.links['space']">(space {{taggable.links['space'].target.entity.name}})</span>
+      <span *ngIf="showOrg && taggable.links['org']">(org {{taggable.links['org'].target.entity.name}})</span>
+      <span *ngIf="taggable.links['service']">({{taggable.links['service'].target.entity.label}})</span>
+    </p>
 
-  <div class='taggable-list'>
-    <tag-input class="taggable-list-item-tags"
-      [(ngModel)]="taggable.tags"
-      [readonly]="!editable"
-      (onRemove)="onTagRemoved($event)"
-      (onAdd)="onTagAdded($event)">
-    </tag-input>
+    <div *ngIf="editable" class="flex taggable-list">
+      <tag-input class="taggable-list-item-tags"
+        [(ngModel)]="taggable.tags"
+        [readonly]="!editable"
+        (onRemove)="onTagRemoved($event)"
+        (onAdd)="onTagAdded($event)">
+      </tag-input>
+    </div>
+
+    <a *ngIf="taggable.getTargetUrl()" class="md-secondary taggable-target-url" href="{{taggable.getTargetUrl()}}">
+      <md-icon svgSrc="/assets/link.svg"></md-icon>
+    </a>
   </div>
+
+
 </md-list-item>
 <!-- <md-card>
   <md-card-subtitle>{{taggable.type}}</md-card-subtitle>

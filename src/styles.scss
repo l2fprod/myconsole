@@ -85,6 +85,17 @@ footer {
   overflow-y: scroll;
 }
 
+.md-list-item {
+  width: 100%;
+  padding: 0;
+}
+
 md-card > md-card-actions:last-child {
   margin-bottom: inherit !important;
+}
+
+.alert {
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid;
 }

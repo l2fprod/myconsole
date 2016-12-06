@@ -174,19 +174,25 @@ $theme: md-light-theme($primary, $accent, $warn);
 }
 
 .status {
-  color: white;
+  color: #EFEFEF;
 }
 
 .status-STARTED {
-  background-color: rgb(69, 181, 97);
+  color: rgb(69, 181, 97);
 }
 
 .status-STOPPED {
-  background-color: rgb(187, 86, 89);
+  color: rgb(187, 86, 89);
 }
 
 .taggable.is-selected .taggable-list-item {
   background-color: #e7e7e7;
+}
+
+.alert-warning {
+  color: #916d3b;
+  background-color: #fcf8e3;
+  border-color: #faebcc !important;
 }
 
 // Include theme styles for core and each component used in your app.

@@ -1,3 +1,5 @@
+<div class="alert alert-warning">This view currently ignores the search filter.</div>
+
 <div class="layout-row flex">
   <div class="layout-row orgs-and-spaces">
     <div class="layout-column flex-50">
@@ -7,9 +9,7 @@
           <sd-taggable class="taggable" [ngClass]="{'is-selected': selectedOrganization===taggable}"
             *ngFor="let taggable of getOrganizations()"
             (click)="selectOrganization(taggable);"
-            [taggable]="taggable"
-            [availableTags]="availableTags"
-            [editable]="editable">
+            [taggable]="taggable">
           </sd-taggable>
         </md-list>
       </md-card>
@@ -22,9 +22,7 @@
             *ngFor="let taggable of selectedOrganization.children['spaces']"
             (click)="selectSpace(taggable);"
             [showOrg]="false"
-            [taggable]="taggable"
-            [availableTags]="availableTags"
-            [editable]="editable">
+            [taggable]="taggable">
           </sd-taggable>
         </md-list>
       </md-card>
@@ -38,9 +36,7 @@
           <sd-taggable class="taggable" *ngFor="let taggable of selectedSpace.children['apps']"
             [showOrg]="false"
             [showSpace]="false"
-            [taggable]="taggable"
-            [availableTags]="availableTags"
-            [editable]="editable">
+            [taggable]="taggable">
           </sd-taggable>
         </md-list>
       </md-card>
@@ -52,9 +48,7 @@
           <sd-taggable class="taggable" *ngFor="let taggable of selectedSpace.children['services']"
             [showOrg]="false"
             [showSpace]="false"
-            [taggable]="taggable"
-            [availableTags]="availableTags"
-            [editable]="editable">
+            [taggable]="taggable">
           </sd-taggable>
         </md-list>
       </md-card>

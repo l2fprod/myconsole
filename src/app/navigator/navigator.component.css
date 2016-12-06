@@ -2,6 +2,10 @@
   min-width: 900px !important;
 }
 
+.alert {
+  margin-bottom: 12px;
+}
+
 .orgs-and-spaces {
   width: 600px;
   min-width: 600px !important;

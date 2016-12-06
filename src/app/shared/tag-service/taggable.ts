@@ -65,12 +65,24 @@ export class Taggable {
     }
   }
 
+  static getType(name:string):TaggableType {
+    const type = Taggable.TYPES.find(type => type.name === name);
+    if (!type) {
+      console.log(name, 'not found');
+    }
+    return type;
+  }
+
   protected constructor(_id: string, type: string, tags: string[], target: any, region: string) {
     this._id = _id;
     this.type = type;
     this.tags = tags;
     this.target = target;
     this.region = region;
+  }
+
+  getType():TaggableType {
+    return Taggable.getType(this.type);
   }
 
   getName():string {

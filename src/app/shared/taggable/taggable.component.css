@@ -1,16 +1,68 @@
 :host {
 }
 
-.card-title {
+.taggable-list-item {
+  line-height: 30px;
+}
+
+.taggable-flag {
+  font-size: 30px;
+  width: 30px;
+  height: 30px;
+  margin-right: 8px;
+}
+
+.status {
+  margin: 0 !important;
+  border-radius: 0px !important;
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  font-size: 30px;
+}
+
+.status-STARTED {
+}
+
+.status-STOPPED {
+  -ms-transform: rotate(90deg); /* IE 9 */
+  -webkit-transform: rotate(90deg); /* Chrome, Safari, Opera */
+  transform: rotate(90deg);
+}
+
+.taggable-name {
+  margin-left: 8px;
   font-size: 16px;
-  line-height: 20px;
-  text-overflow: ellipsis;
   white-space: nowrap;
+  text-overflow: ellipsis;
   overflow: hidden;
 }
 
-.card-subtitle {
-  font-size: 10px;
+.taggable-list {
+  margin: 0px;
+  padding: 0px;
+}
+
+:host >>> .ng2-tag-input.default {
+  border: none;
+  padding: 0px;
+  margin: 0;
+  margin-right: 8px;
+}
+
+:host >>> .ng2-tag {
+  font-size: 14px;
+  line-height: 30px;
+  height: 30px;
+  background: rgb(29, 149, 173);
+  color: white;
+  padding: 0px;
+  padding-left: 8px;
+}
+
+:host >>> .ng2-tag-input__text-input {
+  font-size: 14px;
+  height: 19px;
 }
 
 .taggable-target-url {
@@ -20,44 +72,4 @@
 
 .taggable-target-url:hover {
   text-decoration: underline;;
-}
-
-.status {
-  margin: 4px;
-  border-radius: 10px;
-  width: 20px;
-  height: 20px;
-  min-width: 20px;
-  min-height: 20px;
-  text-align: center;
-  line-height: 20px;
-  font-size: 12px;
-}
-
-:host >>> .ng2-tag {
-  font-size: 13px;
-  line-height: 24px;
-  height: 24px;
-  background: rgb(29, 149, 173);
-  color: white;
-}
-
-:host >>> .ng2-tag_name {
-  font-size: 13px;
-}
-
-:host >>> .ng2-tag__remove-button {
-  font-size: 12px;
-  line-height: 24px;
-  height: 14px;
-  width: 12px;
-}
-
-:host >>> .ng2-tag-input__text-input {
-  font-size: 13px;
-  height: 27px;
-}
-
-:host >>> .ng2-tag-input.default {
-  border: none;
 }
