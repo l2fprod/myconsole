@@ -69,6 +69,17 @@ export class TagFilter implements TaggableFilter {
   }
 }
 
+export class DiegoFilter implements TaggableFilter {
+  constructor(private hasDiego:boolean) {}
+  accept(taggable:Taggable):boolean {
+    return taggable.type === Taggable.TYPE_APPLICATION.name &&
+    taggable.target.entity.diego === this.hasDiego;
+  }
+  toString():string {
+    return 'diego:' + this.hasDiego;
+  }
+}
+
 export class OrganizationFilter implements TaggableFilter {
   constructor(private org:string) {
     this.org = org.toLowerCase();
@@ -174,6 +185,8 @@ export class TaggableFilterFactory {
         return new TagFilter(text.substring('tag:'.length));
       } else if (text.startsWith('status:')) {
         return new StatusFilter(text.substring('status:'.length));
+      } else if (text.startsWith('diego:')) {
+        return new DiegoFilter("true" === text.substring('diego:'.length));
       } else {
         return new TextFilter(text);
       }
