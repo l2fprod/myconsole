@@ -16,8 +16,10 @@
         </a>
       </span>
       <span *ngIf="hasToken()">
-        <button [disabled]="isRefreshing()" md-raised-button color="accent" (click)="refreshAll();">Refresh All</button>
-        <button [disabled]="isRefreshing()" md-raised-button color="accent" (click)="refreshApps();">Refresh Apps</button>
+        <button [disabled]="isRefreshing()" md-raised-button color="accent" (click)="refreshAll();"
+                angulartics2On="click" angularticsCategory="Actions" angularticsEvent="refresh-all">Refresh All</button>
+        <button [disabled]="isRefreshing()" md-raised-button color="accent" (click)="refreshApps();"
+                angulartics2On="click" angularticsCategory="Actions" angularticsEvent="refresh-apps">Refresh Apps</button>
       </span>
 
       <span>

@@ -1,3 +1,4 @@
+import { Angulartics2 } from 'angulartics2';
 import { Component, ChangeDetectorRef } from '@angular/core';
 import { TagService, TaggableViewerComponent } from '../shared/index';
 import { JwtHelper } from 'angular2-jwt';
@@ -12,7 +13,7 @@ export class SettingsComponent extends TaggableViewerComponent {
   jwtHelper: JwtHelper = new JwtHelper();
   decodedToken:any;
 
-  constructor(public tagService: TagService, public changeDetectorRef: ChangeDetectorRef) {
+  constructor(public tagService: TagService, public changeDetectorRef: ChangeDetectorRef, private stats: Angulartics2) {
     super(tagService, changeDetectorRef);
 
     try {
@@ -28,6 +29,7 @@ export class SettingsComponent extends TaggableViewerComponent {
     try {
       this.decode(token);
       this.tagService.setToken(token);
+      this.stats.eventTrack.next({ action: 'set-token', properties: { category: 'Actions' }});
     } catch (err) {
       console.log(err);
     };
