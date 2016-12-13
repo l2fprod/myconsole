@@ -11,6 +11,15 @@
   min-width: 600px !important;
 }
 
+.overview {
+  max-width: 400px;
+  min-width: 200px !important;
+}
+
+.overview .box {
+  padding: 8px;
+}
+
 .box-title {
   text-transform: uppercase;
   letter-spacing: 2px;

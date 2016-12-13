@@ -13,6 +13,7 @@ export class NavigatorComponent extends TaggableViewerComponent implements OnIni
 
   selectedOrganization:Taggable;
   selectedSpace:Taggable;
+  selectedItem:Taggable;
 
   constructor(public tagService: TagService, public changeDetectorRef: ChangeDetectorRef) {
     super(tagService, changeDetectorRef);
@@ -28,5 +29,17 @@ export class NavigatorComponent extends TaggableViewerComponent implements OnIni
 
   selectSpace(space:Taggable) {
     this.selectedSpace = space;
+  }
+
+  selectItem(item:Taggable) {
+    this.selectedItem = item;
+  }
+
+  getApps():Taggable[] {
+    return this.selectedSpace ? this.selectedSpace.children['apps'] : []
+  }
+
+  getServices():Taggable[] {
+    return this.selectedSpace ? this.selectedSpace.children['services'] : []
   }
 }

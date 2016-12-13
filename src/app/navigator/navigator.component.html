@@ -30,10 +30,12 @@
   </div>
   <div class="layout-column flex">
     <div class="layout-column flex-50">
-      <div class="box-title">Applications ({{selectedSpace ? selectedSpace.children['apps'].length : 0}})</div>
+      <div class="box-title">Applications ({{getApps().length}})</div>
       <md-card class="box flex">
         <md-list class="flex" dense *ngIf="selectedSpace">
-          <sd-taggable class="taggable" *ngFor="let taggable of selectedSpace.children['apps']"
+          <sd-taggable class="taggable" [ngClass]="{'is-selected': selectedItem===taggable}"
+            *ngFor="let taggable of getApps()"
+            (click)="selectItem(taggable)"
             [showOrg]="false"
             [showSpace]="false"
             [taggable]="taggable">
@@ -42,10 +44,12 @@
       </md-card>
     </div>
     <div class="layout-column flex-50">
-      <div class="box-title">Services ({{selectedSpace ? selectedSpace.children['services'].length : 0}})</div>
+      <div class="box-title">Services ({{getServices().length}})</div>
       <md-card class="box flex">
         <md-list class="flex" dense *ngIf="selectedSpace">
-          <sd-taggable class="taggable" *ngFor="let taggable of selectedSpace.children['services']"
+          <sd-taggable class="taggable" [ngClass]="{'is-selected': selectedItem===taggable}"
+            *ngFor="let taggable of getServices()"
+            (click)="selectItem(taggable)"
             [showOrg]="false"
             [showSpace]="false"
             [taggable]="taggable">
@@ -53,5 +57,33 @@
         </md-list>
       </md-card>
     </div>
+  </div>
+  <div class="overview flex layout-column" *ngIf="selectedItem">
+    <div class="box-title">Overview</div>
+    <md-card class="box flex">
+      <h3>{{selectedItem.target.entity.name}}</h3>
+
+      <div *ngIf="selectedItem.type === 'app'">
+        <ul>
+          <li>
+            Instances: {{selectedItem.target.entity.instances}}
+          </li>
+          <li>
+            Memory: {{selectedItem.target.entity.memory}}
+          </li>
+          <li>
+            <md-checkbox [checked]="selectedItem.target.entity.diego" [disabled]="true"> Diego Architecture</md-checkbox>
+          </li>
+        </ul>
+      </div>
+
+      <div *ngIf="selectedItem.type === 'service_instance'">
+        <ul>
+          <li *ngIf="selectedItem.links['service']">
+            {{selectedItem.links['service'].target.entity.label}}
+          </li>
+        </ul>
+      </div>
+    </md-card>
   </div>
 </div>
