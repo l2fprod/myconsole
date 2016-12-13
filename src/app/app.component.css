@@ -2,6 +2,10 @@ md-toolbar {
   padding-left: 12px;
 }
 
+md-progress-bar {
+  height: 2px;
+}
+
 .app-views {
   text-align: center;
   width: 64px;

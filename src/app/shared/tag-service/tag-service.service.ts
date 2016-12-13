@@ -6,6 +6,7 @@ import { Taggable, TaggableType } from './taggable';
 import { TaggableFilter, TaggableFilterFactory, AcceptAllFilter } from './taggablefilter';
 import { environment } from '../../../environments';
 import { Router } from '@angular/router';
+import { parallelLimit } from 'async';
 
 import * as PouchDB from 'pouchdb';
 declare let require: any;
@@ -31,6 +32,7 @@ export class TagService {
   private _observable:Observable<Taggable[]>;
   private _observer: Observer<Taggable[]>;
 
+  public refreshing: boolean = false;
   public token: string;
 
   public static REGIONS = [
@@ -138,24 +140,94 @@ export class TagService {
   }
 
   refreshApps() {
-    console.log('Refreshing resources...');
-    TagService.REGIONS.forEach(region => {
-      this.fetchTaggables(region, '/v2/organizations', 'organization');
-      this.fetchTaggables(region, '/v2/spaces', 'space');
-      this.fetchTaggables(region, '/v2/apps', 'app');
+    console.log('Refreshing apps...');
+    this.refreshSome({
+      '/v2/organizations': 'organization',
+      '/v2/spaces': 'space',
+      '/v2/apps': 'app',
     });
   }
 
   refreshAll() {
-    console.log('Refreshing resources...');
-    TagService.REGIONS.forEach(region => {
-      this.fetchTaggables(region, '/v2/organizations', 'organization');
-      this.fetchTaggables(region, '/v2/spaces', 'space');
-      this.fetchTaggables(region, '/v2/apps', 'app');
-      this.fetchTaggables(region, '/v2/service_instances', 'service_instance');
-      this.fetchTaggables(region, '/v2/service_plans', 'service_plan');
-      this.fetchTaggables(region, '/v2/services', 'service');
+    console.log('Refreshing all resources...');
+    this.refreshSome({
+      '/v2/organizations': 'organization',
+      '/v2/spaces': 'space',
+      '/v2/apps': 'app',
+      '/v2/service_instances': 'service_instance',
+      '/v2/service_plans': 'service_plan',
+      '/v2/services': 'service'
     });
+  }
+
+  private refreshSome(calls) {
+    const fetchTasks = [];
+    const fetchedObjects:Taggable[] = [];
+    TagService.REGIONS.forEach(region => {
+      Object.keys(calls).forEach(key => {
+        fetchTasks.push(this.makeFetchTask(region, key, calls[key], fetchedObjects));
+      });
+    });
+
+    const self = this;
+    this.refreshing = true;
+    parallelLimit(fetchTasks, 5, (err, result) => {
+      if (err) {
+        console.log('Fetch error', err);
+        self.refreshing = false;
+      } else {
+        console.log('Fetched all', fetchedObjects.length, 'objects');
+        const start = Promise.resolve();
+
+        start.then(function() {
+          return Promise.all(fetchedObjects.map(taggable => self.addTaggable(taggable)));
+        }).then(function() {
+          console.log('All done!');
+
+          // reload taggables
+          self.loadTaggables().then(function() {
+            self.refreshing = false;
+          }, function() {
+            self.refreshing = false;
+          });
+        }).catch(function() {
+          self.refreshing = false;
+        });
+      }
+    });
+  }
+
+  private makeFetchTask(region: Region, call: string, type: string, fetchedObjects:Taggable[]) {
+    const self = this;
+    return function(callback) {
+      const apiRoot = environment.apiUrl;
+      const path = apiRoot + '/' + region.name +  call; //'?call=' + encodeURIComponent(call);
+
+      console.log('Fetching', path, type);
+      const headers = new Headers({
+        'Authorization': self.token
+      });
+      const options = new RequestOptions({ headers: headers });
+      self.http.get(path, options)
+        .map((res: Response) => {
+          let response = res.json();
+          let results = response.resources;
+          console.log('Received', results.length, 'taggables');
+
+          results.forEach((item: any) => {
+            fetchedObjects.push(Taggable.newTaggable(type + '-' + item.metadata.guid, type, [], item, region.name));
+          });
+
+          if (response.next_url) {
+            console.log('Preparing for more data to retrieve', response.next_url);
+            self.makeFetchTask(region, response.next_url, type, fetchedObjects)(callback);
+          } else {
+            callback(null);
+          }
+        })
+        .catch(callback)
+        .subscribe((taggables: Taggable[]) => { console.log('Completed', region, call, type)});
+    };
   }
 
   private updateFilteredTaggables() {
@@ -168,7 +240,7 @@ export class TagService {
 
   private loadTaggables() {
     console.log('Querying db...');
-    this._taggablesDb.find({
+    return this._taggablesDb.find({
       selector: {
         type: { $exists: true }
       }
@@ -188,36 +260,6 @@ export class TagService {
     });
   }
 
-  private fetchTaggables(region: Region, call: string, type: string): any {
-    const apiRoot = environment.apiUrl;
-    const path = apiRoot + '/' + region.name +  call; //'?call=' + encodeURIComponent(call);
-
-    console.log('Fetching', path, type);
-    const headers = new Headers({
-      'Authorization': this.token
-    });
-    const options = new RequestOptions({ headers: headers });
-    this.http.get(path, options)
-      .map((res: Response) => {
-        let response = res.json();
-        let results = response.resources;
-        console.log('Received', results.length, 'taggables');
-
-        if (response.next_url) {
-          console.log('Preparing for more data to retrieve', response.next_url);
-          this.fetchTaggables(region, response.next_url, type);
-        }
-
-        return results.map((item: any) => {
-          return Taggable.newTaggable(type + '-' + item.metadata.guid, type, [], item, region.name);
-        });
-      })
-      .catch(this.handleError)
-      .subscribe(
-        (taggables: Taggable[]) => taggables.forEach(taggable => this.addTaggable(taggable))
-      );
-  }
-
   private addIndex(db:any, fields:string[]) {
     db.createIndex({
       index: {
@@ -228,16 +270,22 @@ export class TagService {
     }).catch(this.handleError);
   }
 
-  private addTaggable(item: Taggable) {
-    this._taggablesDb.get(item._id)
+  private addTaggable(item: Taggable):any {
+    return this._taggablesDb.get(item._id)
       .then((doc: any) => {
         // doc already exists
         //PENDING(fredL) update if it is more recent
         item._id = doc._id;
         item._rev = doc._rev;
         //PENDING(fredL) need to merge the tags!!!
-        console.log('Updating', item._id);
-        this._taggablesDb.put(item);
+
+        if (JSON.stringify(item.target) === JSON.stringify(doc.target)) {
+          // no change, ignore it
+          // console.log('No change for', item._id);
+        } else {
+          console.log('Updating', item._id);
+          this._taggablesDb.put(item);
+        }
       })
       .catch((err: any) => {
         if (err.status == 404) {

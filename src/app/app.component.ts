@@ -32,6 +32,10 @@ export class AppComponent {
     this.tagService.filterTaggables(text);
   }
 
+  isRefreshing() {
+    return this.tagService.refreshing;
+  }
+
   refreshApps() {
     this.tagService.refreshApps();
   }
