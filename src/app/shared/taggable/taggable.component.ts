@@ -34,4 +34,21 @@ export class TaggableComponent {
   onTagRemoved(item:string) {
     this.tagService.saveTaggable(this.taggable);
   }
+
+  stopApp(app:Taggable) {
+    this.tagService.stopApp(app);
+  }
+
+  startApp(app:Taggable) {
+    this.tagService.startApp(app);
+  }
+
+  killFirstAppInstance(app:Taggable) {
+    this.tagService.killFirstAppInstance(app);
+  }
+
+  hasToken() {
+    return this.tagService.token != null;
+  }
+
 }

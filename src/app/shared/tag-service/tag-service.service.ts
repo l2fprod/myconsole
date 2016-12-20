@@ -139,6 +139,18 @@ export class TagService {
     this.token = token;
   }
 
+  stopApp(app:Taggable) {
+    this.makePut(app.region, `/v2/apps/${app.target.metadata.guid}`, { state: 'STOPPED' });
+  }
+
+  startApp(app:Taggable) {
+    this.makePut(app.region, `/v2/apps/${app.target.metadata.guid}`, { state: 'STARTED' });
+  }
+
+  killFirstAppInstance(app:Taggable) {
+    this.makeDelete(app.region, `/v2/apps/${app.target.metadata.guid}/instances/0`);
+  }
+
   refreshApps() {
     console.log('Refreshing apps...');
     this.refreshSome({
@@ -195,6 +207,34 @@ export class TagService {
         });
       }
     });
+  }
+
+  private makeDelete(region: string, call:string) {
+    const apiRoot = environment.apiUrl;
+    const path = apiRoot + '/' + region +  call;
+    const headers = new Headers({
+      'Authorization': this.token
+    });
+    const options = new RequestOptions({ headers: headers });
+    console.log('DELETE', path);
+    this.http.delete(path, options)
+      .map((res: Response) => res.json())
+      .catch(this.handleError)
+      .subscribe((body) => console.log('Received', body));
+  }
+
+  private makePut(region: string, call:string, payload:any) {
+    const apiRoot = environment.apiUrl;
+    const path = apiRoot + '/' + region +  call;
+    const headers = new Headers({
+      'Authorization': this.token
+    });
+    const options = new RequestOptions({ headers: headers });
+    console.log('PUT', path);
+    this.http.put(path, payload, options)
+      .map((res: Response) => res.json())
+      .catch(this.handleError)
+      .subscribe((body) => console.log('Received', body));
   }
 
   private makeFetchTask(region: Region, call: string, type: string, fetchedObjects:Taggable[]) {
