@@ -87,7 +87,13 @@ footer {
 
 .md-list-item {
   width: 100%;
+  height: 100% !important;
   padding: 0;
+}
+
+md-list-item::before, md-list-item .md-list-item-inner::before {
+  min-height: 0px !important;
+  display: none !important;
 }
 
 md-card > md-card-actions:last-child {

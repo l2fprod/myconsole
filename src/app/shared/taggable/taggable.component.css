@@ -1,8 +1,12 @@
 :host {
 }
 
+:host >>> md-list-item {
+  height: 48px !important;
+}
+
 .taggable-list-item {
-  line-height: 30px;
+  line-height: 48px;
 }
 
 .taggable-flag {
@@ -10,10 +14,12 @@
   width: 30px;
   height: 30px;
   margin-right: 8px;
+  margin-top: 9px;
 }
 
 .status {
   margin: 0 !important;
+  margin-top: 9px !important;
   border-radius: 0px !important;
   width: 30px;
   height: 30px;

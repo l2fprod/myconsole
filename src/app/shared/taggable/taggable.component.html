@@ -13,11 +13,11 @@
 
     <span class="taggable-name" [ngClass]="{flex: !editable}" title="{{taggable.target.entity.name}}">{{taggable.target.entity.name}}</span>
 
-    <p>
+    <div>
       <span *ngIf="showSpace && taggable.links['space']">(space {{taggable.links['space'].target.entity.name}})</span>
       <span *ngIf="showOrg && taggable.links['org']">(org {{taggable.links['org'].target.entity.name}})</span>
       <span *ngIf="taggable.links['service']">({{taggable.links['service'].target.entity.label}})</span>
-    </p>
+    </div>
 
     <div *ngIf="editable" class="flex taggable-list">
       <tag-input class="taggable-list-item-tags"
