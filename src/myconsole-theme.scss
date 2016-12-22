@@ -195,6 +195,11 @@ $theme: md-light-theme($primary, $accent, $warn);
   border-color: #faebcc !important;
 }
 
+.ng2-tag {
+  background: md-color($md-cyan, 400) !important;
+  color: white !important;
+}
+
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.

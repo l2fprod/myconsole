@@ -49,28 +49,6 @@
   padding: 0px;
 }
 
-:host >>> .ng2-tag-input.default {
-  border: none;
-  padding: 0px;
-  margin: 0;
-  margin-right: 8px;
-}
-
-:host >>> .ng2-tag {
-  font-size: 14px;
-  line-height: 30px;
-  height: 30px;
-  background: rgb(29, 149, 173);
-  color: white;
-  padding: 0px;
-  padding-left: 8px;
-}
-
-:host >>> .ng2-tag-input__text-input {
-  font-size: 14px;
-  height: 19px;
-}
-
 .taggable-target-url {
   color: inherit;
   text-decoration: none;

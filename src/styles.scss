@@ -105,3 +105,23 @@ md-card > md-card-actions:last-child {
   border-radius: 4px;
   border: 1px solid;
 }
+
+.ng2-tag-input.default {
+  border: none !important;
+  padding: 0px !important;
+  margin: 0 !important;
+  margin-right: 8px !important;
+}
+
+.ng2-tag {
+  font-size: 14px !important;
+  line-height: 30px !important;
+  height: 30px !important;
+  padding: 0px !important;
+  padding-left: 8px !important;
+}
+
+.ng2-tag-input__text-input {
+  font-size: 14px !important;
+  height: 19px !important;
+}
