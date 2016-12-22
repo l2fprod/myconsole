@@ -14,6 +14,7 @@ import { NavigatorModule } from './navigator/navigator.module';
 import { BrowserModule as MyConsoleBrowserModule } from './browser/browser.module';
 import { ListViewModule } from './listview/listview.module';
 import { SettingsModule } from './settings/settings.module';
+import { HelpModule } from './help/help.module';
 import { SharedModule } from './shared/shared.module';
 
 @NgModule({
@@ -33,6 +34,7 @@ import { SharedModule } from './shared/shared.module';
     ListViewModule,
     MyConsoleBrowserModule,
     SettingsModule,
+    HelpModule,
     Angulartics2Module.forRoot([ Angulartics2GoogleAnalytics ]),
   ],
   exports: [],

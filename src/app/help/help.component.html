@@ -1,0 +1,55 @@
+<div>
+  <h4>Set a token</h4>
+  <p>
+    The token is used to interact with Bluemix Cloud Foundry APIs. Without a token, you can't retrieve your Cloud Foundry orgs, spaces, apps and services.
+    <a routerLink="/settings" preserveQueryParams preserveFragment>Set your token here.</a>
+  </p>
+
+  <h4>Search for resources</h4>
+  <p>
+    Type any text in the Search bar to find resources.
+  </p>
+  <p>
+    The search supports a few keywords. It always performs a full inclusive search, i.e the resource must match all criteria.
+  </p>
+  <ul>
+    <li>
+      <b>region</b> to focus on resources in a specific region. Possible values are ng, eu-gb, au-syd.
+    </li>
+    <li>
+      <b>org</b> to focus on resources in a specific organization
+    </li>
+    <li>
+      <b>space</b> to focus on resources in a specific space
+    </li>
+    <li>
+      <b>service</b> to select service instances of a specific service type
+    </li>
+    <li>
+      <b>tag</b> to select resources with the given tag
+    </li>
+    <li>
+      <b>diego</b> to select apps based on whether they have been deployed on the Diego architecture
+    </li>
+    <li>
+      <b>url</b> to select apps matching a given route
+    </li>
+    <li>
+      <b>status</b> to select apps with a given status
+    </li>
+  </ul>
+  <p>
+    A few examples of what you can search on:
+  </p>
+  <ul>
+    <li>
+      <a routerLink="/list" [queryParams]="{q: 'status:down org:John'}"><b>status:down org:John</b></a> to view all apps currently down in the organizations having their name containing <i>John</i> across all regions
+    </li>
+    <li>
+      <a routerLink="/browse" [queryParams]="{q: 'service:cloudant'}"><b>service:cloudant</b></a> to view all Cloudant service instances
+    </li>
+    <li>
+      <a routerLink="/browse" [queryParams]="{q: 'todo'}"><b>todo</b></a> to find all resources having <i>todo</i> in their name
+    </li>
+  </ul>
+</div>
