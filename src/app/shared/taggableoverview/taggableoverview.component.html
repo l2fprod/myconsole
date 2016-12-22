@@ -1,0 +1,45 @@
+<md-card class="flex">
+  <h3>{{taggable.target.entity.name}}</h3>
+
+  <div *ngIf="taggable.type === 'app'">
+    <ul>
+      <li>
+        Instances: {{taggable.target.entity.instances}}
+      </li>
+      <li>
+        Memory: {{taggable.target.entity.memory}}
+      </li>
+      <li>
+        <md-checkbox [checked]="taggable.target.entity.diego" [disabled]="true"> Diego Architecture</md-checkbox>
+      </li>
+    </ul>
+
+    <h4>Routes</h4>
+    <ul>
+      <li *ngFor="let url of taggable.getAppUrls()">
+        <a href="{{url}}">
+          {{url}}
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <div *ngIf="taggable.type === 'service_instance'">
+    <ul>
+      <li *ngIf="taggable.links['service']">
+        {{taggable.links['service'].target.entity.label}}
+      </li>
+    </ul>
+  </div>
+
+  <div>
+    <h4>Tags</h4>
+    <tag-input class="taggable-list-item-tags"
+      [(ngModel)]="taggable.tags"
+      [readonly]="false"
+      (onRemove)="onTagRemoved($event)"
+      (onAdd)="onTagAdded($event)">
+    </tag-input>
+  </div>
+
+</md-card>

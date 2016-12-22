@@ -11,7 +11,7 @@
       [ngClass]="{'status-STARTED': 'STARTED'===taggable.target.entity.state, 'status-STOPPED': 'STOPPED'===taggable.target.entity.state}"
       class="status" fontSet="fa" fontIcon="fa-{{taggable.getType().icon}}"></md-icon>
 
-    <span class="taggable-name" [ngClass]="{flex: !editable}" title="{{taggable.target.entity.name}}">{{taggable.target.entity.name}}</span>
+    <span class="taggable-name flex" title="{{taggable.target.entity.name}}">{{taggable.target.entity.name}}</span>
 
     <div>
       <span *ngIf="showSpace && taggable.links['space']">(space {{taggable.links['space'].target.entity.name}})</span>
@@ -19,7 +19,7 @@
       <span *ngIf="taggable.links['service']">({{taggable.links['service'].target.entity.label}})</span>
     </div>
 
-    <div *ngIf="editable" class="flex taggable-list">
+    <div *ngIf="showTags" class="taggable-list">
       <tag-input class="taggable-list-item-tags"
         [(ngModel)]="taggable.tags"
         [readonly]="!editable"

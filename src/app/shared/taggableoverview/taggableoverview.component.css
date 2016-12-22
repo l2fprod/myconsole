@@ -1,0 +1,6 @@
+:host {
+}
+
+:host md-card {
+  overflow: scroll;
+}

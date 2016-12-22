@@ -1,23 +1,32 @@
-<md-slide-toggle class="toggle-editable" [(ngModel)]="editable">Edit Tags</md-slide-toggle>
-
-<div *ngFor="let currentType of getTaggableTypes()">
-  {{currentType.plural}}
-  <!-- <ul class="taggable-list-header">
-    <li *ngFor="let type of getTaggableTypes()">
-      <a class="taggable-list-header-item " *ngIf="type != currentType" routerLink="/list" fragment="{{type.plural}}">{{type.plural}}</a>
-      <a class="taggable-list-header-item taggable-list-header-item-current" *ngIf="type == currentType" name="{{type.plural}}">{{type.plural}}</a>
-    </li>
-  </ul> -->
-  <md-card class="taggable-list">
-    <md-list dense>
-      <md-list-item *ngIf="getTaggableByType(currentType).length == 0" class="taggable-list-item">
-        <span>No {{currentType.display}}</span>
-      </md-list-item>
-      <sd-taggable class="taggable" *ngFor="let taggable of getTaggableByType(currentType)"
-        [taggable]="taggable"
-        [availableTags]="availableTags"
-        [editable]="editable">
-      </sd-taggable>
-    </md-list>
-  </md-card>
+<div class="layout-column flex">
+  <div>
+    <md-slide-toggle class="toggle-editable" [(ngModel)]="editable">Edit Tags</md-slide-toggle>
+  </div>
+  <div class="flex layout-row">
+    <div class="taggables flex layout-column">
+      <div *ngFor="let currentType of getTaggableTypes()">
+        {{currentType.plural}}
+        <md-card class="taggable-list">
+          <md-list dense>
+            <md-list-item *ngIf="getTaggableByType(currentType).length == 0" class="taggable-list-item">
+              <span>No {{currentType.display}}</span>
+            </md-list-item>
+            <sd-taggable *ngFor="let taggable of getTaggableByType(currentType)"
+              class="taggable" [ngClass]="{'is-selected': selectedItem===taggable}"
+              (click)="selectItem(taggable)"
+              [taggable]="taggable"
+              [availableTags]="availableTags"
+              [editable]="editable"
+              [showTags]="true">
+            </sd-taggable>
+          </md-list>
+        </md-card>
+      </div>
+    </div>
+    <div class="layout-column overview" *ngIf="selectedItem">
+      Overview
+      <sd-taggableoverview class="flex" [taggable]="selectedItem">
+      </sd-taggableoverview>
+    </div>
+  </div>
 </div>

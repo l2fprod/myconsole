@@ -2,6 +2,10 @@
   margin-left: 20px;
 }
 
+.taggables {
+  overflow: scroll;
+}
+
 .taggable-list-header {
   margin-top: 20px;
   margin-bottom: 8px;
@@ -18,4 +22,9 @@
 }
 
 .taggable-list-header-item-current {
+}
+
+.overview {
+  max-width: 400px;
+  width: 400px !important;
 }
