@@ -168,7 +168,10 @@ export class TagService {
       '/v2/apps': Taggable.TYPE_APPLICATION,
       '/v2/service_instances': Taggable.TYPE_SERVICE_INSTANCE,
       '/v2/service_plans': Taggable.TYPE_SERVICE_PLAN,
-      '/v2/services': Taggable.TYPE_SERVICE
+      '/v2/services': Taggable.TYPE_SERVICE,
+      '/v2/routes': Taggable.TYPE_ROUTE,
+      '/v2/route_mappings': Taggable.TYPE_ROUTE_MAPPING,
+      '/v2/domains': Taggable.TYPE_DOMAIN
     });
   }
 

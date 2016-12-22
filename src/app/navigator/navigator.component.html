@@ -75,6 +75,15 @@
             <md-checkbox [checked]="selectedItem.target.entity.diego" [disabled]="true"> Diego Architecture</md-checkbox>
           </li>
         </ul>
+
+        <h4>Routes</h4>
+        <ul>
+          <li *ngFor="let url of selectedItem.getAppUrls()">
+            <a href="{{url}}">
+              {{url}}
+            </a>
+          </li>
+        </ul>
       </div>
 
       <div *ngIf="selectedItem.type === 'service_instance'">

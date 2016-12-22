@@ -37,6 +37,9 @@ export class Taggable {
   static TYPE_SERVICE_INSTANCE = new TaggableType('service_instance', 'Service', 'Services', 'cloud');
   static TYPE_SERVICE_PLAN = new TaggableType('service_plan', 'Service Plan', 'Service Plans', 'cloud');
   static TYPE_SERVICE = new TaggableType('service', 'Service', 'Services', null);
+  static TYPE_ROUTE = new TaggableType('route', 'Route', 'Routes', null);
+  static TYPE_ROUTE_MAPPING = new TaggableType('route_mapping', 'Route Mapping', 'Route Mapping', null);
+  static TYPE_DOMAIN = new TaggableType('domain', 'Domain', 'Domains', null);
 
   static TYPES: TaggableType[] = [
     Taggable.TYPE_ORGANIZATION,
@@ -69,6 +72,12 @@ export class Taggable {
         return new ServiceInstance(_id, tags, target, region);
       case Taggable.TYPE_SERVICE.name:
         return new Service(_id, tags, target, region);
+      case Taggable.TYPE_ROUTE_MAPPING.name:
+        return new RouteMapping(_id, tags, target, region);
+      case Taggable.TYPE_ROUTE.name:
+        return new Route(_id, tags, target, region);
+      case Taggable.TYPE_DOMAIN.name:
+        return new Domain(_id, tags, target, region);
     default:
       return new Taggable(_id, type, tags, target, region);
     }
@@ -106,8 +115,7 @@ export class Taggable {
     try {
       return this.getName().localeCompare(other.getName(), [], { sensitivity: 'base' });
     } catch (err) {
-      console.log(this._id, err);
-      return -1;
+      return this._id.localeCompare(other._id);
     }
   }
 
@@ -116,7 +124,7 @@ export class Taggable {
   }
 }
 
-class Organization extends Taggable {
+export class Organization extends Taggable {
   constructor(_id: string, tags: string[], target: any, region: string) {
     super(_id, Taggable.TYPE_ORGANIZATION.name, tags, target, region);
     this.children['spaces'] = [];
@@ -126,7 +134,7 @@ class Organization extends Taggable {
   }
 }
 
-class Space extends Taggable {
+export class Space extends Taggable {
   constructor(_id: string, tags: string[], target: any, region: string) {
     super(_id, Taggable.TYPE_SPACE.name, tags, target, region);
     this.children['apps'] = [];
@@ -181,9 +189,10 @@ class Space extends Taggable {
   }
 }
 
-class Application extends Taggable {
+export class Application extends Taggable {
   constructor(_id: string, tags: string[], target: any, region: string) {
     super(_id, Taggable.TYPE_APPLICATION.name, tags, target, region);
+    this.children['routes'] = [];
   }
   resolveLinks(findByGuid:any) {
     this.links['space'] = findByGuid(this.target.entity.space_guid);
@@ -193,9 +202,41 @@ class Application extends Taggable {
   getTargetUrl():string {
     return `https://console.${this.region}.bluemix.net/apps/${this.target.metadata.guid}`;
   }
+  getAppUrls():string[] {
+    return this.children['routes'].map((route) =>
+      `https://${route.target.entity.host}.${route.links['domain'].target.entity.name}`);
+  }
 }
 
-class Service extends Taggable {
+export class RouteMapping extends Taggable {
+  constructor(_id: string, tags: string[], target: any, region: string) {
+    super(_id, Taggable.TYPE_ROUTE_MAPPING.name, tags, target, region);
+  }
+  resolveLinks(findByGuid:any) {
+    const app = findByGuid(this.target.entity.app_guid);
+    const route = findByGuid(this.target.entity.route_guid);
+    if (app && route) {
+      app.children['routes'].push(route);
+    }
+  }
+}
+
+export class Route extends Taggable {
+  constructor(_id: string, tags: string[], target: any, region: string) {
+    super(_id, Taggable.TYPE_ROUTE.name, tags, target, region);
+  }
+  resolveLinks(findByGuid:any) {
+    this.links['domain'] = findByGuid(this.target.entity.domain_guid);
+  }
+}
+
+export class Domain extends Taggable {
+  constructor(_id: string, tags: string[], target: any, region: string) {
+    super(_id, Taggable.TYPE_DOMAIN.name, tags, target, region);
+  }
+}
+
+export class Service extends Taggable {
   constructor(_id: string, tags: string[], target: any, region: string) {
     super(_id, Taggable.TYPE_SERVICE.name, tags, target, region);
   }
@@ -204,7 +245,7 @@ class Service extends Taggable {
   }
 }
 
-class ServiceInstance extends Taggable {
+export class ServiceInstance extends Taggable {
   constructor(_id: string, tags: string[], target: any, region: string) {
     super(_id, Taggable.TYPE_SERVICE_INSTANCE.name, tags, target, region);
   }

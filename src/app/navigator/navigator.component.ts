@@ -25,10 +25,13 @@ export class NavigatorComponent extends TaggableViewerComponent implements OnIni
 
   selectOrganization(org:Taggable) {
     this.selectedOrganization = org;
+    this.selectedSpace = null;
+    this.selectedItem = null;
   }
 
   selectSpace(space:Taggable) {
     this.selectedSpace = space;
+    this.selectedItem = null;
   }
 
   selectItem(item:Taggable) {

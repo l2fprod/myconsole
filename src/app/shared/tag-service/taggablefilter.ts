@@ -1,4 +1,4 @@
-import { Taggable } from './taggable';
+import { Taggable, Application } from './taggable';
 
 export interface TaggableFilter {
   accept(taggable:Taggable):boolean;
@@ -80,6 +80,16 @@ export class DiegoFilter implements TaggableFilter {
   }
 }
 
+export class UrlFilter implements TaggableFilter {
+  constructor(private url:string) {}
+  accept(taggable:Taggable):boolean {
+    return taggable.type === Taggable.TYPE_APPLICATION.name &&
+    (taggable as Application).getAppUrls().find(url => url.indexOf(this.url) >= 0) != null;
+  }
+  toString():string {
+    return 'url:' + this.url;
+  }
+}
 export class OrganizationFilter implements TaggableFilter {
   constructor(private org:string) {
     this.org = org.toLowerCase();
@@ -183,6 +193,8 @@ export class TaggableFilterFactory {
         return new TypeFilter(text.substring('type:'.length));
       } else if (text.startsWith('tag:')) {
         return new TagFilter(text.substring('tag:'.length));
+      } else if (text.startsWith('url:')) {
+        return new UrlFilter(text.substring('url:'.length));
       } else if (text.startsWith('status:')) {
         return new StatusFilter(text.substring('status:'.length));
       } else if (text.startsWith('diego:')) {
