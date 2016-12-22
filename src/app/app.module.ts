@@ -5,6 +5,7 @@ import { HttpModule } from '@angular/http';
 import { MaterialModule } from '@angular/material';
 import { RouterModule } from '@angular/router';
 import { Angulartics2Module, Angulartics2GoogleAnalytics } from 'angulartics2';
+import { LocalStorageModule } from 'angular-2-local-storage';
 
 import { AppComponent } from './app.component';
 import { routes } from './app.routes';
@@ -36,6 +37,10 @@ import { SharedModule } from './shared/shared.module';
     SettingsModule,
     HelpModule,
     Angulartics2Module.forRoot([ Angulartics2GoogleAnalytics ]),
+    LocalStorageModule.withConfig({
+      prefix: 'my-console',
+      storageType: 'localStorage'
+    })
   ],
   exports: [],
   providers: [],

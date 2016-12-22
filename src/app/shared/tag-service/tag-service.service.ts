@@ -7,6 +7,7 @@ import { TaggableFilter, TaggableFilterFactory, AcceptAllFilter } from './taggab
 import { environment } from '../../../environments';
 import { Router } from '@angular/router';
 import { parallelLimit } from 'async';
+import { LocalStorageService } from 'angular-2-local-storage';
 
 import * as PouchDB from 'pouchdb';
 declare let require: any;
@@ -45,7 +46,8 @@ export class TagService {
    * @param {Http} http - The injected Http.
    * @constructor
    */
-  constructor(private http: Http, private router: Router) {
+  constructor(private http: Http, private router: Router,
+              private localStorageService: LocalStorageService) {
     console.log('Initializing TagService...');
     this._observable = new Observable(observer =>
       this._observer = observer).share();
@@ -56,6 +58,8 @@ export class TagService {
 
     this.addIndex(this._taggablesDb, [ 'type' ]);
     this.addIndex(this._taggablesDb, [ 'tags' ]);
+
+    this.token = localStorageService.get('token') as string;
 
     this.loadTaggables();
   }
@@ -137,6 +141,7 @@ export class TagService {
   setToken(token:string) {
     console.log('Setting token to', token);
     this.token = token;
+    this.localStorageService.set('token', token);
   }
 
   stopApp(app:Taggable) {
