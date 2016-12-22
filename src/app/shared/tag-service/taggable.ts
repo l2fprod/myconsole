@@ -16,18 +16,27 @@ export class Taggable {
   links: Taggable[] = [];
   children: Taggable[][] = [];
 
-  resolveLinks(service:TagService) {
+  mergeDuplicates(service:TagService):Taggable[] {
+    return [];
+  }
+
+  resolveLinks(findByGuid:any) {
     if (!this.target) {
       console.log(this._id, 'has no target');
       return;
     }
   }
 
+  mergeWith(same:Taggable) {
+    this.tags = same.tags;
+  }
+
   static TYPE_ORGANIZATION = new TaggableType('organization', 'Organization', 'Organizations', 'users');
   static TYPE_SPACE = new TaggableType('space', 'Space', 'Spaces', 'folder');
   static TYPE_APPLICATION = new TaggableType('app', 'Application', 'Applications', 'rocket');
   static TYPE_SERVICE_INSTANCE = new TaggableType('service_instance', 'Service', 'Services', 'cloud');
-  protected static TYPE_SERVICE = new TaggableType('service', 'Service', 'Services', null);
+  static TYPE_SERVICE_PLAN = new TaggableType('service_plan', 'Service Plan', 'Service Plans', 'cloud');
+  static TYPE_SERVICE = new TaggableType('service', 'Service', 'Services', null);
 
   static TYPES: TaggableType[] = [
     Taggable.TYPE_ORGANIZATION,
@@ -112,8 +121,6 @@ class Organization extends Taggable {
     super(_id, Taggable.TYPE_ORGANIZATION.name, tags, target, region);
     this.children['spaces'] = [];
   }
-  resolveLinks(service:TagService) {
-  }
   getTargetUrl():string {
     return `https://console.${this.region}.bluemix.net/dashboard/apps/?orgName=${encodeURIComponent(this.target.entity.name)}`;
   }
@@ -125,9 +132,48 @@ class Space extends Taggable {
     this.children['apps'] = [];
     this.children['services'] = [];
   }
-  resolveLinks(service:TagService) {
-    this.links['org'] = service.getTaggable(this.target.entity.organization_guid);
+  resolveLinks(findByGuid:any) {
+    this.links['org'] = findByGuid(this.target.entity.organization_guid);
     this.links['org'].children['spaces'].push(this);
+  }
+  /*
+   * @returns elements to update or marked for deletion
+   */
+  mergeDuplicates(service:TagService):Taggable[] {
+    // look at all apps in the space, if two have the same name, keep the most recent
+    const mergeActions:Taggable[] = [];
+
+    // sort apps by name and most recent first
+    const apps:Taggable[] = this.children['apps'];
+    apps.sort((app1, app2) => {
+      let result = app1.compareTo(app2);
+      if (result == 0) {
+        return app2.target.metadata.updated_at.localeCompare(app1.target.metadata.updated_at);
+      } else {
+        return result;
+      }
+    });
+
+    // remove duplicate from the apps array
+    for (let index = apps.length - 1; index > 0; index--) {
+      if (apps[index].getName() === apps[index - 1].getName()) {
+        console.log('Detected a duplicate app, removing it', apps[index].getName());
+
+        // merge the tags and mark the app to be persisted
+        apps[index - 1].mergeWith(apps[index]);
+        mergeActions.push(apps[index - 1]);
+
+        // mark the current app for deletion as a duplicate
+        (apps[index] as any)._deleted = true; // cast as any to avoid typescript error
+        mergeActions.push(apps[index]);
+
+        // remove from the list
+        apps.splice(index, 1);
+      }
+    }
+
+    // tell the caller to delete these duplicates
+    return mergeActions;
   }
 
   getTargetUrl():string {
@@ -139,12 +185,11 @@ class Application extends Taggable {
   constructor(_id: string, tags: string[], target: any, region: string) {
     super(_id, Taggable.TYPE_APPLICATION.name, tags, target, region);
   }
-  resolveLinks(service:TagService) {
-    this.links['space'] = service.getTaggable(this.target.entity.space_guid);
+  resolveLinks(findByGuid:any) {
+    this.links['space'] = findByGuid(this.target.entity.space_guid);
     this.links['space'].children['apps'].push(this);
-    this.links['org'] = service.getTaggable(this.links['space'].target.entity.organization_guid);
+    this.links['org'] = findByGuid(this.links['space'].target.entity.organization_guid);
   }
-
   getTargetUrl():string {
     return `https://console.${this.region}.bluemix.net/apps/${this.target.metadata.guid}`;
   }
@@ -153,8 +198,6 @@ class Application extends Taggable {
 class Service extends Taggable {
   constructor(_id: string, tags: string[], target: any, region: string) {
     super(_id, Taggable.TYPE_SERVICE.name, tags, target, region);
-  }
-  resolveLinks(service:TagService) {
   }
   getName():string {
     return this.target.entity.label;
@@ -165,13 +208,13 @@ class ServiceInstance extends Taggable {
   constructor(_id: string, tags: string[], target: any, region: string) {
     super(_id, Taggable.TYPE_SERVICE_INSTANCE.name, tags, target, region);
   }
-  resolveLinks(service:TagService) {
-    this.links['space'] = service.getTaggable(this.target.entity.space_guid);
+  resolveLinks(findByGuid:any) {
+    this.links['space'] = findByGuid(this.target.entity.space_guid);
     this.links['space'].children['services'].push(this);
-    this.links['org'] = service.getTaggable(this.links['space'].target.entity.organization_guid);
-    this.links['service_plan'] = service.getTaggable(this.target.entity.service_plan_guid);
+    this.links['org'] = findByGuid(this.links['space'].target.entity.organization_guid);
+    this.links['service_plan'] = findByGuid(this.target.entity.service_plan_guid);
     if (this.links['service_plan']) {
-      this.links['service'] = service.getTaggable(this.links['service_plan'].target.entity.service_guid);
+      this.links['service'] = findByGuid(this.links['service_plan'].target.entity.service_guid);
     }
   }
   getTargetUrl():string {

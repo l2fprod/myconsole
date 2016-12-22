@@ -50,8 +50,8 @@ export class TagService {
     this._observable = new Observable(observer =>
       this._observer = observer).share();
 
-    this._taggablesDb = new PouchDB('taggables');
-    this._tagsDb = new PouchDB('tags');
+    this._taggablesDb = new PouchDB('taggables', { auto_compaction: true });
+    this._tagsDb = new PouchDB('tags', { auto_compaction: true });
     console.log(this._taggablesDb, this._tagsDb);
 
     this.addIndex(this._taggablesDb, [ 'type' ]);
@@ -163,12 +163,12 @@ export class TagService {
   refreshAll() {
     console.log('Refreshing all resources...');
     this.refreshSome({
-      '/v2/organizations': 'organization',
-      '/v2/spaces': 'space',
-      '/v2/apps': 'app',
-      '/v2/service_instances': 'service_instance',
-      '/v2/service_plans': 'service_plan',
-      '/v2/services': 'service'
+      '/v2/organizations': Taggable.TYPE_ORGANIZATION,
+      '/v2/spaces': Taggable.TYPE_SPACE,
+      '/v2/apps': Taggable.TYPE_APPLICATION,
+      '/v2/service_instances': Taggable.TYPE_SERVICE_INSTANCE,
+      '/v2/service_plans': Taggable.TYPE_SERVICE_PLAN,
+      '/v2/services': Taggable.TYPE_SERVICE
     });
   }
 
@@ -177,7 +177,7 @@ export class TagService {
     const fetchedObjects:Taggable[] = [];
     TagService.REGIONS.forEach(region => {
       Object.keys(calls).forEach(key => {
-        fetchTasks.push(this.makeFetchTask(region, key, calls[key], fetchedObjects));
+        fetchTasks.push(this.makeFetchTask(region, key, calls[key].name, fetchedObjects));
       });
     });
 
@@ -279,6 +279,7 @@ export class TagService {
   }
 
   private loadTaggables() {
+    const self = this;
     console.log('Querying db...');
     return this._taggablesDb.find({
       selector: {
@@ -286,14 +287,34 @@ export class TagService {
       }
     }).then((result: any) => {
       console.log('Found', result.docs.length, 'taggables');
-      this._taggables = result.docs.map((doc:any) => Taggable.fromDoc(doc));
-      console.log('Mapped all taggables');
-      this._taggables.sort((a:Taggable, b:Taggable):number => {
+      let loadedTaggables = result.docs.map((doc:any) => Taggable.fromDoc(doc));
+
+      console.log('Sorting taggables');
+      loadedTaggables.sort((a:Taggable, b:Taggable):number => {
         return a.compareTo(b);
       });
-      console.log('Sorted all taggables');
-      this._taggables.forEach((taggable: Taggable) => taggable.resolveLinks(this));
-      console.log('Resolved all links');
+
+      const lookupTaggable = function(guid:string) {
+        return loadedTaggables.find(taggable => taggable.target.metadata.guid === guid);
+      }
+
+      console.log('Resolving all taggable links');
+      loadedTaggables.forEach((taggable: Taggable) => taggable.resolveLinks(lookupTaggable));
+
+      console.log('Merging duplicate items');
+      let toBeUpdated:Taggable[] = [];
+      loadedTaggables.forEach((taggable: Taggable) => {
+        toBeUpdated = toBeUpdated.concat(taggable.mergeDuplicates(this));
+      });
+
+      loadedTaggables = loadedTaggables.filter((taggable) => !taggable._deleted);
+      this._taggables = loadedTaggables;
+
+      console.log('Updating', toBeUpdated.length, 'items');
+      return Promise.all(toBeUpdated.map(taggable => self.updateTaggable(taggable)));
+    }).then(() => {
+      console.log('Kept', this._taggables.length, 'taggables');
+      console.log('Updating filtered taggables');
       this.updateFilteredTaggables();
     }).catch((err) => {
       console.log(err);
@@ -310,19 +331,24 @@ export class TagService {
     }).catch(this.handleError);
   }
 
+  updateTaggable(item: Taggable):any {
+    return this._taggablesDb.put(item)
+      .then((result:any) => console.log('Updated', item.getName()))
+      .catch(this.handleError);
+  }
+
   private addTaggable(item: Taggable):any {
     return this._taggablesDb.get(item._id)
       .then((doc: any) => {
         // doc already exists
-        //PENDING(fredL) update if it is more recent
         item._id = doc._id;
         item._rev = doc._rev;
-        //PENDING(fredL) need to merge the tags!!!
 
         if (JSON.stringify(item.target) === JSON.stringify(doc.target)) {
           // no change, ignore it
           // console.log('No change for', item._id);
         } else {
+          item.mergeWith(doc);
           console.log('Updating', item._id);
           this._taggablesDb.put(item);
         }
