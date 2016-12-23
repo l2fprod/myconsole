@@ -17,14 +17,12 @@ md-progress-bar {
   height: 40px;
   line-height: 40px;
   font-size: 24px;
-  margin-bottom: 12px;
 }
 
 .app-content {
   overflow-y: auto;
   padding-top: 24px;
   padding-right: 24px;
-  padding-bottom: 12px;
 }
 
 .logo {
@@ -63,4 +61,12 @@ md-progress-bar {
 
 .twitter-icon {
   fill: #FFFFFF !important;
+}
+
+.footer {
+  padding: 12px;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
