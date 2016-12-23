@@ -36,11 +36,8 @@ export class TagService {
   public refreshing: boolean = false;
   public token: string;
 
-  public static REGIONS = [
-    new Region('ng', 'US South', 'us'),
-    new Region('eu-gb', 'United Kingdom', 'gb'),
-    new Region('au-syd', 'Sydney', 'au')
-  ];
+  public static REGIONS = environment.regions.map(region =>
+    new Region(region.id, region.label, region.flag));
 
   /**
    * @param {Http} http - The injected Http.

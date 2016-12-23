@@ -5,5 +5,22 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:8080/api'
+  apiUrl: 'http://localhost:8080/api',
+  regions: [
+    {
+      id: 'ng',
+      label: 'US South',
+      flag: 'us'
+    },
+    {
+      id: 'eu-gb',
+      label: 'United Kingdom',
+      flag: 'gb'
+    },
+    {
+      id: 'au-syd',
+      label: 'Sydney',
+      flag: 'au'
+    }
+  ]
 };

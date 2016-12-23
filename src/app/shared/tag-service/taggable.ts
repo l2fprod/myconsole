@@ -31,6 +31,10 @@ export class Taggable {
     this.tags = same.tags;
   }
 
+  getRegion():Region {
+    return TagService.REGIONS.find(region => region.name === this.region);
+  }
+
   static TYPE_ORGANIZATION = new TaggableType('organization', 'Organization', 'Organizations', 'users');
   static TYPE_SPACE = new TaggableType('space', 'Space', 'Spaces', 'folder');
   static TYPE_APPLICATION = new TaggableType('app', 'Application', 'Applications', 'rocket');
