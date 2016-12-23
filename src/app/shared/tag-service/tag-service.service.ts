@@ -58,7 +58,7 @@ export class TagService {
 
     this.token = localStorageService.get('token') as string;
 
-    this.loadTaggables();
+    this.loadTaggables(null);
   }
 
   asObservable() {
@@ -198,11 +198,11 @@ export class TagService {
 
         start.then(function() {
           return Promise.all(fetchedObjects.map(taggable => self.addTaggable(taggable)));
-        }).then(function() {
+        }).then(function(retrievedTaggables:Taggable[]) {
           console.log('All done!');
 
           // reload taggables
-          self.loadTaggables().then(function() {
+          self.loadTaggables(fetchedObjects).then(function() {
             self.refreshing = false;
           }, function() {
             self.refreshing = false;
@@ -283,7 +283,7 @@ export class TagService {
     }
   }
 
-  private loadTaggables() {
+  private loadTaggables(retrievedTaggables:Taggable[]) {
     const self = this;
     console.log('Querying db...');
     return this._taggablesDb.find({
@@ -293,6 +293,26 @@ export class TagService {
     }).then((result: any) => {
       console.log('Found', result.docs.length, 'taggables');
       let loadedTaggables = result.docs.map((doc:any) => Taggable.fromDoc(doc));
+
+      let toBeUpdated:Taggable[] = [];
+      if (retrievedTaggables) {
+        console.log('Identifying deleted taggables');
+        const retrievedTaggablesById = {};
+        retrievedTaggables.forEach(taggable => {
+          retrievedTaggablesById[taggable._id] = taggable._rev;
+        });
+
+        loadedTaggables.forEach(taggable => {
+          if (!retrievedTaggablesById[taggable._id]) {
+            taggable.markForDeletion();
+            toBeUpdated.push(taggable);
+            console.log(taggable._id, taggable.getName(), 'no longer exists');
+          }
+        });
+        // remove the deleted objects from the items we consider
+        loadedTaggables = loadedTaggables.filter((taggable) => !taggable._deleted);
+        console.log('After cleanup,', loadedTaggables.length, 'taggables remain');
+      }
 
       console.log('Sorting taggables');
       loadedTaggables.sort((a:Taggable, b:Taggable):number => {
@@ -307,7 +327,6 @@ export class TagService {
       loadedTaggables.forEach((taggable: Taggable) => taggable.resolveLinks(lookupTaggable));
 
       console.log('Merging duplicate items');
-      let toBeUpdated:Taggable[] = [];
       loadedTaggables.forEach((taggable: Taggable) => {
         toBeUpdated = toBeUpdated.concat(taggable.mergeDuplicates(this));
       });
@@ -345,8 +364,7 @@ export class TagService {
   private addTaggable(item: Taggable):any {
     return this._taggablesDb.get(item._id)
       .then((doc: any) => {
-        // doc already exists
-        item._id = doc._id;
+        // doc already exists, capture the rev
         item._rev = doc._rev;
 
         if (JSON.stringify(item.target) === JSON.stringify(doc.target)) {
@@ -357,6 +375,8 @@ export class TagService {
           console.log('Updating', item._id);
           this._taggablesDb.put(item);
         }
+
+        return item;
       })
       .catch((err: any) => {
         if (err.status == 404) {
