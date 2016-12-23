@@ -1,4 +1,4 @@
-import { TagService } from './tag-service.service';
+import { TagService, Region } from './tag-service.service';
 import { TaggableFilter, TaggableFilterFactory } from './taggablefilter';
 
 export class TaggableType {
@@ -18,6 +18,10 @@ export class Taggable {
 
   mergeDuplicates(service:TagService):Taggable[] {
     return [];
+  }
+
+  markForDeletion() {
+    (this as any)._deleted = true; // cast as any to avoid typescript error
   }
 
   resolveLinks(findByGuid:any) {
@@ -176,7 +180,7 @@ export class Space extends Taggable {
         mergeActions.push(apps[index - 1]);
 
         // mark the current app for deletion as a duplicate
-        (apps[index] as any)._deleted = true; // cast as any to avoid typescript error
+        apps[index].markForDeletion();
         mergeActions.push(apps[index]);
 
         // remove from the list
