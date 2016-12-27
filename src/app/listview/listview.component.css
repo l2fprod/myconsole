@@ -3,7 +3,8 @@
 }
 
 .taggables {
-  overflow: scroll;
+  overflow-x: auto;
+  overflow-y: scroll;
 }
 
 .taggable-list-header {
