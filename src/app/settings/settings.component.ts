@@ -5,8 +5,8 @@ import { JwtHelper } from 'angular2-jwt';
 
 @Component({
   selector: 'settings',
-  templateUrl: 'settings.component.html',
-  styleUrls: ['settings.component.css']
+  templateUrl: './settings.component.html',
+  styleUrls: ['./settings.component.css']
 })
 export class SettingsComponent extends TaggableViewerComponent {
 

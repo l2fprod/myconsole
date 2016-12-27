@@ -6,8 +6,8 @@ import { Taggable, TagService } from '../tag-service/index';
  */
 @Component({
   selector: 'sd-taggableoverview',
-  templateUrl: 'taggableoverview.component.html',
-  styleUrls: ['taggableoverview.component.css'],
+  templateUrl: './taggableoverview.component.html',
+  styleUrls: ['./taggableoverview.component.css'],
   host: {
     'class': 'layout-column'
   }

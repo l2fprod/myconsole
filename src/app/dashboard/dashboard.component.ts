@@ -6,8 +6,8 @@ declare let d3: any;
 
 @Component({
   selector: 'dashboard',
-  templateUrl: 'dashboard.component.html',
-  styleUrls: ['dashboard.component.css'],
+  templateUrl: './dashboard.component.html',
+  styleUrls: ['./dashboard.component.css'],
   host: {
     'class': 'flex layout-column'
   }

@@ -3,8 +3,8 @@ import { TagService, Taggable, TaggableType, TaggableViewerComponent } from '../
 
 @Component({
   selector: 'navigator',
-  templateUrl: 'navigator.component.html',
-  styleUrls: ['navigator.component.css'],
+  templateUrl: './navigator.component.html',
+  styleUrls: ['./navigator.component.css'],
   host: {
     'class': 'flex layout-column'
   }

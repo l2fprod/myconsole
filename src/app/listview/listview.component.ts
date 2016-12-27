@@ -3,8 +3,8 @@ import { TagService, Taggable, TaggableType, TaggableViewerComponent } from '../
 
 @Component({
   selector: 'listview',
-  templateUrl: 'listview.component.html',
-  styleUrls: ['listview.component.css'],
+  templateUrl: './listview.component.html',
+  styleUrls: ['./listview.component.css'],
   host: {
     'class': 'flex layout-column'
   }
