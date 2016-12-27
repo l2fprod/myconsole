@@ -49,6 +49,10 @@
   padding: 0px;
 }
 
+.taggable-target-url md-icon {
+  line-height: 48px;
+}
+
 .taggable-target-url {
   color: inherit;
   text-decoration: none;

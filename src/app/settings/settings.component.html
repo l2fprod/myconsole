@@ -16,18 +16,26 @@
       <table style="width: 100%" cellspacing="0">
         <tr>
           <td>
-            <md-input class="decoded-value" placeholder="User name" disabled value="{{decodedToken.user_name}}"></md-input>
+            <md-input-container class="decoded-value">
+              <input md-input placeholder="User name" disabled ngModel="{{decodedToken.user_name}}">
+            </md-input-container>
           </td>
           <td>
-            <md-input class="decoded-value" placeholder="Email" disabled value="{{decodedToken.email}}"></md-input>
+            <md-input-container class="decoded-value">
+              <input md-input placeholder="Email" disabled ngModel="{{decodedToken.email}}">
+            </md-input-container>
           </td>
         </tr>
         <tr>
           <td>
-            <md-input class="decoded-value" placeholder="Issued at" disabled value="{{decodedToken.iat}}"></md-input>
+            <md-input-container class="decoded-value">
+              <input md-input placeholder="Issued at" disabled ngModel="{{decodedToken.iat}}">
+            </md-input-container>
           </td>
           <td>
-            <md-input class="decoded-value" placeholder="Expires at" disabled value="{{decodedToken.exp}}"></md-input>
+            <md-input-container class="decoded-value">
+              <input md-input placeholder="Expires at" disabled ngModel="{{decodedToken.exp}}">
+            </md-input-container>
           </td>
         </tr>
       </table>
