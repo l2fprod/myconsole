@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { TagService } from './shared/index';
 import { ActivatedRoute } from '@angular/router';
 import { Angulartics2GoogleAnalytics } from 'angulartics2';
+import {DomSanitizer} from '@angular/platform-browser';
+import {MdIconRegistry} from '@angular/material';
 
 @Component({
   selector: 'app-root',
@@ -12,8 +14,18 @@ export class AppComponent {
 
   searchText:string;
 
-  constructor(public tagService: TagService, private route: ActivatedRoute, private stats: Angulartics2GoogleAnalytics) {
+  constructor(
+    public tagService: TagService,
+    private route: ActivatedRoute,
+    private stats: Angulartics2GoogleAnalytics,
+    mdIconRegistry: MdIconRegistry, sanitizer: DomSanitizer
+  ) {
     console.log("App is starting");
+    mdIconRegistry.addSvgIcon('github', sanitizer.bypassSecurityTrustResourceUrl('/assets/github-circle.svg') as string);
+    mdIconRegistry.addSvgIcon('twitter', sanitizer.bypassSecurityTrustResourceUrl('/assets/twitter.svg') as string);
+    mdIconRegistry.addSvgIcon('view_chart', sanitizer.bypassSecurityTrustResourceUrl('/assets/view-chart.svg') as string);
+    mdIconRegistry.addSvgIcon('view_grid', sanitizer.bypassSecurityTrustResourceUrl('/assets/view-grid.svg') as string);
+    mdIconRegistry.addSvgIcon('tag', sanitizer.bypassSecurityTrustResourceUrl('/assets/tag.svg') as string);
   }
 
   ngOnInit() {
