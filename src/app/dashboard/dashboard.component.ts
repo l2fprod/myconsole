@@ -53,6 +53,13 @@ export class DashboardComponent extends TaggableViewerComponent implements OnIni
     super.ngOnInit();
   }
 
+  ngAfterViewInit() {
+    // workaround to redraw the chart after initialization so that it resizes
+    setTimeout(() => {
+      window.dispatchEvent(new Event('resize'));
+    }, 500);
+  }
+
   onNewTaggables(taggables:Taggable[]) {
     this.computeData();
   }
