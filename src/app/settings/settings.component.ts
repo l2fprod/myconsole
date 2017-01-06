@@ -27,8 +27,10 @@ export class SettingsComponent extends TaggableViewerComponent {
 
   setToken(token:string) {
     try {
-      this.decode(token);
-      this.tagService.setToken(token);
+      // remove any carriage return in the token
+      const sanitizedToken = token.replace(/\r?\n|\r/g, '').trim();
+      this.decode(sanitizedToken);
+      this.tagService.setToken(sanitizedToken);
       this.stats.eventTrack.next({ action: 'set-token', properties: { category: 'Actions' }});
     } catch (err) {
       console.log(err);
