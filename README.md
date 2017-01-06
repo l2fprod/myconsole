@@ -1,4 +1,4 @@
-# Give another look at your Bluemix resources
+# Give another look at your resources
 
 My Console uses the Cloud Foundry API to show a snapshot of your organizations, spaces, applications and services.
 
