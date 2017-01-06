@@ -52,4 +52,8 @@ export class TaggableComponent {
     return this.tagService.token != null;
   }
 
+  enableDiego(app:Taggable) {
+    this.tagService.enableDiego(app);
+  }
+
 }

@@ -35,6 +35,7 @@
           <button (click)='startApp(taggable);' md-menu-item [disabled]="!hasToken()">Start</button>
           <hr/>
           <button (click)='killFirstAppInstance(taggable);' md-menu-item [disabled]="!hasToken()">Terminate First Instance</button>
+          <button *ngIf='!taggable.target.entity.diego' (click)='enableDiego(taggable)' md-menu-item [disabled]="!hasToken">Enable Diego</button>
       </md-menu>
     </div>
 

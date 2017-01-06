@@ -149,6 +149,10 @@ export class TagService {
     this.makePut(app.region, `/v2/apps/${app.target.metadata.guid}`, { state: 'STARTED' });
   }
 
+  enableDiego(app:Taggable) {
+    this.makePut(app.region, `/v2/apps/${app.target.metadata.guid}`, { diego: true });
+  }
+
   killFirstAppInstance(app:Taggable) {
     this.makeDelete(app.region, `/v2/apps/${app.target.metadata.guid}/instances/0`);
   }
