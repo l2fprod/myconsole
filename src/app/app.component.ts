@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { TagService } from './shared/index';
+import { Component, trigger, style, animate, transition } from '@angular/core';
+import { TagService, TaggableType, Region, Taggable } from './shared/index';
 import { ActivatedRoute } from '@angular/router';
 import { Angulartics2GoogleAnalytics } from 'angulartics2';
 import {DomSanitizer} from '@angular/platform-browser';
@@ -8,7 +8,19 @@ import {MdIconRegistry} from '@angular/material';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
+  animations: [
+    trigger('refreshStatus', [
+      transition('void => *', [
+        style({ opacity: 0, transform: 'translate(-50%, -100%)' }),
+        animate(250)
+      ]),
+      transition('* => void', [
+        style({ opacity: 1 }),
+        animate(500)
+      ])
+    ])
+  ]
 })
 export class AppComponent {
 
@@ -46,6 +58,18 @@ export class AppComponent {
 
   isRefreshing() {
     return this.tagService.refreshing;
+  }
+
+  getStatus() {
+    return this.tagService.refreshStatus;
+  }
+
+  getRegions():Region[] {
+    return TagService.REGIONS;
+  }
+
+  getTaggableTypes():TaggableType[] {
+    return Taggable.ALL_TYPES;
   }
 
   refreshApps() {

@@ -71,3 +71,33 @@ md-progress-bar {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.refresh-status {
+  text-align: center;
+  position: absolute;
+  top: 64px;
+  left: 50%;
+  transform: translate(-50%, 0);
+  padding: 8px;
+  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 5px;
+  opacity: 1;
+  z-index: 1;
+}
+
+.refresh-status-region {
+  display: inline-block;
+  margin-left: 8px;
+  margin-right: 8px;
+}
+
+.refresh-status-types {
+  display: inline-block;
+  padding: 0;
+  margin: 0;
+}
+
+.refresh-status-region li {
+  display: inline-block;
+  margin-right: 4px;
+}

@@ -34,6 +34,7 @@ export class TagService {
   private _observer: Observer<Taggable[]>;
 
   public refreshing: boolean = false;
+  public refreshStatus: any = { }
   public token: string;
 
   public static REGIONS = environment.regions.map(region =>
@@ -186,23 +187,40 @@ export class TagService {
   }
 
   private refreshSome(calls) {
+    const self = this;
+    this.refreshStatus = {
+      byRegion: {},
+      messages: [],
+      database: 'new',
+      cleanup: 'new',
+      filter: 'new'
+    };
+
     const fetchTasks = [];
     const fetchedObjects:Taggable[] = [];
     TagService.REGIONS.forEach(region => {
+      self.refreshStatus.byRegion[region.name] = { region: region, types: {} };
       Object.keys(calls).forEach(key => {
         fetchTasks.push(this.makeFetchTask(region, key, calls[key].name, fetchedObjects));
+        self.refreshStatus.byRegion[region.name].types[calls[key].name] = {
+          type: calls[key],
+          state: 'new'
+        };
       });
     });
 
-    const self = this;
+    // it is starting!
     this.refreshing = true;
-    parallelLimit(fetchTasks, 5, (err, result) => {
+
+    parallelLimit(fetchTasks, 10, (err, result) => {
       if (err) {
         console.log('Fetch error', err);
         self.refreshing = false;
       } else {
         console.log('Fetched all', fetchedObjects.length, 'objects');
         const start = Promise.resolve();
+
+        self.refreshStatus.database = 'inprogress';
 
         start.then(function() {
           return Promise.all(fetchedObjects.map(taggable => self.addTaggable(taggable)));
@@ -211,6 +229,7 @@ export class TagService {
 
           // reload taggables
           self.loadTaggables(fetchedObjects).then(function() {
+            console.log('Refresh complete!');
             self.refreshing = false;
           }, function() {
             self.refreshing = false;
@@ -253,6 +272,7 @@ export class TagService {
   private makeFetchTask(region: Region, call: string, type: string, fetchedObjects:Taggable[]) {
     const self = this;
     return function(callback) {
+      self.refreshStatus.byRegion[region.name].types[type].state = 'inprogress';
       const apiRoot = environment.apiUrl;
       const path = apiRoot + '/' + region.name +  call; //'?call=' + encodeURIComponent(call);
 
@@ -275,6 +295,7 @@ export class TagService {
             console.log('Preparing for more data to retrieve', response.next_url);
             self.makeFetchTask(region, response.next_url, type, fetchedObjects)(callback);
           } else {
+            self.refreshStatus.byRegion[region.name].types[type].state = 'done';
             callback(null);
           }
         })
@@ -285,6 +306,7 @@ export class TagService {
 
   private updateFilteredTaggables() {
     this._filteredTaggables = this._taggables.filter(taggable => this._filter.accept(taggable));
+    console.log('Kept', this._filteredTaggables.length, 'taggables after filtering');
     this._filteredByTypes = [];
     if (this._observer) {
       this._observer.next(this._filteredTaggables);
@@ -293,17 +315,20 @@ export class TagService {
 
   private loadTaggables(retrievedTaggables:Taggable[]) {
     const self = this;
+    self.refreshStatus.database = 'inprogress';
     console.log('Querying db...');
     return this._taggablesDb.find({
       selector: {
         type: { $exists: true }
       }
     }).then((result: any) => {
+      self.refreshStatus.database = 'done';
       console.log('Found', result.docs.length, 'taggables');
       let loadedTaggables = result.docs.map((doc:any) => Taggable.fromDoc(doc));
 
       let toBeUpdated:Taggable[] = [];
       if (retrievedTaggables) {
+        self.refreshStatus.cleanup = 'inprogress';
         console.log('Identifying deleted taggables');
         const retrievedTaggablesById = {};
         retrievedTaggables.forEach(taggable => {
@@ -345,9 +370,12 @@ export class TagService {
       console.log('Updating', toBeUpdated.length, 'items');
       return Promise.all(toBeUpdated.map(taggable => self.updateTaggable(taggable)));
     }).then(() => {
+      self.refreshStatus.cleanup = 'done';
       console.log('Kept', this._taggables.length, 'taggables');
       console.log('Updating filtered taggables');
+      self.refreshStatus.filter = 'inprogress';
       this.updateFilteredTaggables();
+      self.refreshStatus.filter = 'done';
     }).catch((err) => {
       console.log(err);
     });

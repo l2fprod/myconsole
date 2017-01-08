@@ -35,10 +35,28 @@
       </span>
 
     </md-toolbar>
-    <div>
-      <md-progress-bar *ngIf="isRefreshing()" mode="indeterminate" color="warn"></md-progress-bar>
+    <div *ngIf="isRefreshing()">
+      <md-progress-bar mode="indeterminate" color="warn"></md-progress-bar>
     </div>
   </header>
+
+  <div *ngIf="isRefreshing()" [@refreshStatus] class="refresh-status md-whiteframe-10dp">
+    <div class="refresh-status-region" *ngFor="let region of getRegions()">
+      <span class="flag-icon flag-icon-{{region.icon}}"></span>
+      <ul class="refresh-status-types" *ngIf="getStatus().byRegion[region.name]">
+        <li *ngFor="let type of getTaggableTypes()">
+          <span class="refresh-state-{{getStatus().byRegion[region.name].types[type.name].state}}">
+            <i *ngIf="getStatus().byRegion[region.name].types[type.name].state=='new'"class="fa fa-circle-o" aria-hidden="true"></i>
+            <i *ngIf="getStatus().byRegion[region.name].types[type.name].state=='inprogress'"class="fa fa-play-circle-o" aria-hidden="true"></i>
+            <i *ngIf="getStatus().byRegion[region.name].types[type.name].state=='done'"class="fa fa-check-circle-o" aria-hidden="true"></i>
+          </span>
+        </li>
+      </ul>
+    </div>
+    <span class="refresh-state-{{getStatus().database}}"><i class="fa fa-database" aria-hidden="true"></i></span>
+    <span class="refresh-state-{{getStatus().cleanup}}"><i class="fa fa-recycle" aria-hidden="true"></i></span>
+    <span class="refresh-state-{{getStatus().filter}}"><i class="fa fa-filter" aria-hidden="true"></i></span>
+  </div>
 
   <div class="layout-row layout-fill flex">
     <div class="app-views layout-column">

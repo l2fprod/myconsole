@@ -49,6 +49,18 @@ export class Taggable {
   static TYPE_ROUTE_MAPPING = new TaggableType('route_mapping', 'Route Mapping', 'Route Mapping', null);
   static TYPE_DOMAIN = new TaggableType('domain', 'Domain', 'Domains', null);
 
+  static ALL_TYPES: TaggableType[] = [
+    Taggable.TYPE_ORGANIZATION,
+    Taggable.TYPE_SPACE,
+    Taggable.TYPE_APPLICATION,
+    Taggable.TYPE_SERVICE_INSTANCE,
+    Taggable.TYPE_SERVICE_PLAN,
+    Taggable.TYPE_SERVICE,
+    Taggable.TYPE_ROUTE,
+    Taggable.TYPE_ROUTE_MAPPING,
+    Taggable.TYPE_DOMAIN,
+  ]
+
   static TYPES: TaggableType[] = [
     Taggable.TYPE_ORGANIZATION,
     Taggable.TYPE_SPACE,

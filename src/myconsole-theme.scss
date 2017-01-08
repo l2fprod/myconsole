@@ -141,6 +141,22 @@ $theme: md-light-theme($primary, $accent, $warn);
   color: white;
 }
 
+.refresh-status {
+  background-color: #EFEFEF;
+}
+
+.refresh-state-new {
+  color: #FFFFFF;
+}
+
+.refresh-state-inprogress {
+  color: #999999;
+}
+
+.refresh-state-done {
+  color: rgb(69, 181, 97);
+}
+
 .nvd3.nv-pie .nv-pie-title {
   fill: #999999 !important;
 }
