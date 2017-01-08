@@ -1,5 +1,3 @@
-<div class="alert alert-warning">This view currently ignores the search filter.</div>
-
 <div class="layout-row flex">
   <div class="layout-row orgs-and-spaces">
     <div class="layout-column flex-50">
@@ -15,11 +13,11 @@
       </md-card>
     </div>
     <div class="layout-column flex-50">
-      <div class="box-title">Spaces ({{selectedOrganization ? selectedOrganization.children['spaces'].length : 0}})</div>
+      <div class="box-title">Spaces ({{selectedOrganization ? getSpaces().length : 0}})</div>
       <md-card class="box flex">
         <md-list class="flex" dense *ngIf="selectedOrganization">
           <sd-taggable class="taggable" [ngClass]="{'is-selected': selectedSpace===taggable}"
-            *ngFor="let taggable of selectedOrganization.children['spaces']"
+            *ngFor="let taggable of getSpaces()"
             (click)="selectSpace(taggable);"
             [showOrg]="false"
             [taggable]="taggable">

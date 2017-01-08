@@ -18,14 +18,27 @@ export class AcceptAllFilter implements TaggableFilter {
 }
 
 export class CompoundFilter implements TaggableFilter {
-  constructor(private filters:TaggableFilter[]) {}
+  constructor(private filters:TaggableFilter[], private includeParents:boolean) {}
   accept(taggable:Taggable):boolean {
+    let match = true;
     for (let i = 0, c = this.filters.length; i < c; i++) {
       if (!this.filters[i].accept(taggable)) {
-        return false;
+        match = false;
       }
     }
-    return true;
+
+    // if we need to include parents in the filtering results,
+    // we check if any child of this taggable match the filter
+    if (!match && this.includeParents) {
+      match = this.acceptedByChildren(taggable, this);
+    }
+
+    return match;
+  }
+  private acceptedByChildren(taggable:Taggable, filter:TaggableFilter):boolean {
+    return Object.keys(taggable.children)
+      .find((key:string) =>
+        taggable.children[key].find((taggable:Taggable) => filter.accept(taggable)) !== undefined) !== undefined;
   }
   toString():string {
     return this.filters.toString();
@@ -174,7 +187,7 @@ export class StatusFilter implements TaggableFilter {
 }
 
 export class TaggableFilterFactory {
-  static buildFilter(query:string):TaggableFilter {
+  static buildFilter(query:string, includeParents:boolean):TaggableFilter {
     if (query === null || query === undefined) {
       return new AcceptAllFilter();
     }
@@ -203,6 +216,6 @@ export class TaggableFilterFactory {
         return new TextFilter(text);
       }
     });
-    return new CompoundFilter(filters);
+    return new CompoundFilter(filters, includeParents);
   }
 }

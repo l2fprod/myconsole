@@ -1,5 +1,5 @@
 import { TagService, Region } from './tag-service.service';
-import { TaggableFilter, TaggableFilterFactory } from './taggablefilter';
+//import { TaggableFilter, TaggableFilterFactory } from './taggablefilter';
 
 export class TaggableType {
   constructor(public name: string, public display: string, public plural: string, public icon:string) { }

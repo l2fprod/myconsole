@@ -20,7 +20,7 @@ export class NavigatorComponent extends TaggableViewerComponent implements OnIni
   }
 
   getOrganizations():Taggable[] {
-    return this.tagService.getTaggablesByType(Taggable.TYPE_ORGANIZATION);
+    return this.tagService.getFilteredTaggablesByType(Taggable.TYPE_ORGANIZATION);
   }
 
   selectOrganization(org:Taggable) {
@@ -38,11 +38,21 @@ export class NavigatorComponent extends TaggableViewerComponent implements OnIni
     this.selectedItem = item;
   }
 
+  getSpaces(org:Taggable) {
+    return this.selectedOrganization ? this.tagService.applyFilter(this.selectedOrganization.children['spaces']) : [];
+  }
+
   getApps():Taggable[] {
-    return this.selectedSpace ? this.selectedSpace.children['apps'] : []
+    return this.selectedSpace ? this.tagService.applyFilter(this.selectedSpace.children['apps']) : []
   }
 
   getServices():Taggable[] {
-    return this.selectedSpace ? this.selectedSpace.children['services'] : []
+    return this.selectedSpace ? this.tagService.applyFilter(this.selectedSpace.children['services']) : []
   }
+
+  onNewTaggables(taggables:Taggable[]) {
+    super.onNewTaggables(taggables);
+    this.selectOrganization(null);
+  }
+
 }

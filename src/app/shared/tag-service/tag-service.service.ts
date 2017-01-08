@@ -105,7 +105,7 @@ export class TagService {
     }
 
     console.log('Setting filter to', text);
-    this._filter = TaggableFilterFactory.buildFilter(text);
+    this._filter = TaggableFilterFactory.buildFilter(text, true);
     this._filterText = text;
     this.updateFilteredTaggables();
 
@@ -118,7 +118,7 @@ export class TagService {
   }
 
   getFilteredTaggablesMatching(text:string):Taggable[] {
-    const filter = TaggableFilterFactory.buildFilter(text);
+    const filter = TaggableFilterFactory.buildFilter(text, false);
     return this._filteredTaggables.filter(taggable => filter.accept(taggable));
   }
 
@@ -133,6 +133,10 @@ export class TagService {
 
   getTaggablesByType(type:TaggableType):Taggable[] {
     return this._taggables.filter(taggable => type.name === taggable.type);
+  }
+
+  applyFilter(taggables:Taggable[]):Taggable[] {
+    return taggables.filter(taggable => this._filter.accept(taggable));
   }
 
   setToken(token:string) {

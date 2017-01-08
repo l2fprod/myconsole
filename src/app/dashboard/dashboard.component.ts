@@ -61,6 +61,7 @@ export class DashboardComponent extends TaggableViewerComponent implements OnIni
   }
 
   onNewTaggables(taggables:Taggable[]) {
+    super.onNewTaggables(taggables);
     this.computeData();
   }
 
@@ -101,12 +102,12 @@ export class DashboardComponent extends TaggableViewerComponent implements OnIni
             {
               name: `Up (${region.display})`,
               value: this.tagService.getFilteredTaggablesMatchingByType(Taggable.TYPE_APPLICATION,
-              new CompoundFilter([ regionFilter, upFilter ])).length
+              new CompoundFilter([ regionFilter, upFilter ], false)).length
             },
             {
               name: `Down (${region.display})`,
               value: this.tagService.getFilteredTaggablesMatchingByType(Taggable.TYPE_APPLICATION,
-              new CompoundFilter([ regionFilter, downFilter ])).length
+              new CompoundFilter([ regionFilter, downFilter ], false)).length
             }
           ]
         }]
