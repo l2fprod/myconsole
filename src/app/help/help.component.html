@@ -62,4 +62,13 @@
       <a routerLink="/browse" [queryParams]="{q: 'todo'}"><b>todo</b></a> to find all resources having <i>todo</i> in their name
     </li>
   </ul>
+
+  <h4>Behind the scenes</h4>
+  <p>
+    My Console retrieves all your organizations, spaces, apps and services across regions and stores this information in the local storage of your web browser. Thus the information is not always up-to-date but good enough for a global snapshot of your resources and to navigate the regions, orgs and spaces.
+  </p>
+  <p>
+    Data is stored in a PouchDB, in the browser local storage. Client is built with Angular + Material.
+  </p>
+
 </div>
