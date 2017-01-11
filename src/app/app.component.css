@@ -45,13 +45,32 @@ md-progress-bar {
 }
 
 .search {
+  position: relative;
   flex: 1 1 auto;
-  border: none;
   margin-left: 12px;
   margin-right: 12px;
+}
+
+.search-field {
+  width: 100%;
+  position: relative;
+  border: none;
   text-align: left;
   padding: 6px;
   outline: none;
+}
+
+.search-clear {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  line-height: 24px;
+  height: 24px !important;
+  width: 24px !important;
+}
+
+.search-clear md-button-focus-overlay {
+  display: none;
 }
 
 .toolbar-icon {

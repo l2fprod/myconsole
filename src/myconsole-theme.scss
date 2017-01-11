@@ -132,12 +132,12 @@ $theme: md-light-theme($primary, $accent, $warn);
   background-color: #e7e7e7;
 }
 
-.search {
+.search-field {
   color: white;
   background-color: md-color($md-cyan, 400);
 }
 
-.search::-webkit-input-placeholder {
+.search-field::-webkit-input-placeholder {
   color: white;
 }
 

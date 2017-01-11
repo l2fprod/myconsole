@@ -52,6 +52,10 @@ export class AppComponent {
     return this.tagService.token != null;
   }
 
+  clearSearch() {
+    this.tagService.filterTaggables('');
+  }
+
   filterTaggables(text:string) {
     this.tagService.filterTaggables(text);
   }

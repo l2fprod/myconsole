@@ -7,8 +7,13 @@
       <span class="title">My Console</span>
       <span class="subtitle">give another look at your resources</span>
 
-      <input class="search" [ngModel]="searchText"
-        placeholder="Search" #search (change)='filterTaggables(search.value);' autofocus />
+      <div class="search">
+        <input class="search-field" [ngModel]="searchText"
+          placeholder="Search" #search (change)='filterTaggables(search.value);' autofocus />
+        <button *ngIf="search.value!==''" class="search-clear" disableRipple md-icon-button (click)="clearSearch(); search.value='';">
+          <md-icon>cancel</md-icon>
+        </button>
+      </div>
 
       <span *ngIf="!hasToken()">
         <a md-raised-button color="warn" routerLink="/settings" preserveQueryParams preserveFragment>
@@ -23,7 +28,7 @@
       </span>
 
       <span>&nbsp;</span>
-      
+
       <span>
         <a md-icon-button routerLink="/help" preserveQueryParams preserveFragment [routerLinkActive]="['is-active']">
           <md-icon>help_outline</md-icon>
