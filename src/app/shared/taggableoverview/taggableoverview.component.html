@@ -1,5 +1,8 @@
 <md-card class="flex">
-  <h3>{{taggable.target.entity.name}}</h3>
+  <div class="layout-row">
+    <h3 class="title flex">{{taggable.target.entity.name}}</h3>
+    <sd-taggablepopup [taggable]="taggable"></sd-taggablepopup>
+  </div>
 
   <div *ngIf="taggable.type === 'app'">
     <ul>
@@ -17,7 +20,7 @@
     <h4>Routes</h4>
     <ul>
       <li *ngFor="let url of taggable.getAppUrls()">
-        <a href="{{url}}">
+        <a target="_blank" href="{{url}}">
           {{url}}
         </a>
       </li>

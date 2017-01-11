@@ -1,0 +1,12 @@
+<div *ngIf="taggable.type==='app'">
+  <button md-icon-button [md-menu-trigger-for]='taggableMenu'>
+    <md-icon>more_vert</md-icon>
+  </button>
+  <md-menu x-position="before" #taggableMenu="mdMenu">
+    <button (click)='stopApp(taggable);' md-menu-item [disabled]="!hasToken()">Stop</button>
+    <button (click)='startApp(taggable);' md-menu-item [disabled]="!hasToken()">Start</button>
+    <hr/>
+    <button (click)='killFirstAppInstance(taggable);' md-menu-item [disabled]="!hasToken()">Terminate First Instance</button>
+    <button *ngIf='!taggable.target.entity.diego' (click)='enableDiego(taggable)' md-menu-item [disabled]="!hasToken">Enable Diego</button>
+  </md-menu>
+</div>

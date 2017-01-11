@@ -17,27 +17,7 @@
       <span *ngIf="taggable.links['service']">({{taggable.links['service'].target.entity.label}})</span>
     </div>
 
-    <div *ngIf="showTags" class="taggable-list">
-      <tag-input class="taggable-list-item-tags"
-        [(ngModel)]="taggable.tags"
-        [readonly]="!editable"
-        (onRemove)="onTagRemoved($event)"
-        (onAdd)="onTagAdded($event)">
-      </tag-input>
-    </div>
-
-    <div *ngIf="taggable.type==='app'">
-      <button md-icon-button [md-menu-trigger-for]='taggableMenu'>
-        <md-icon>more_vert</md-icon>
-      </button>
-      <md-menu x-position="before" #taggableMenu="mdMenu">
-          <button (click)='stopApp(taggable);' md-menu-item [disabled]="!hasToken()">Stop</button>
-          <button (click)='startApp(taggable);' md-menu-item [disabled]="!hasToken()">Start</button>
-          <hr/>
-          <button (click)='killFirstAppInstance(taggable);' md-menu-item [disabled]="!hasToken()">Terminate First Instance</button>
-          <button *ngIf='!taggable.target.entity.diego' (click)='enableDiego(taggable)' md-menu-item [disabled]="!hasToken">Enable Diego</button>
-      </md-menu>
-    </div>
+    <sd-taggablepopup [taggable]="taggable"></sd-taggablepopup>
 
     <a *ngIf="taggable.getTargetUrl()" target="_blank" class="md-secondary taggable-target-url" href="{{taggable.getTargetUrl()}}">
       <md-icon>open_in_new</md-icon>

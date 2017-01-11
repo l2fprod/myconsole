@@ -5,3 +5,8 @@
   overflow-y: scroll;
   overflow-x: auto;
 }
+
+.title {
+  margin: 0;
+  line-height: 40px;
+}
