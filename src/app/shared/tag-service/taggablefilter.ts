@@ -182,10 +182,38 @@ export class StatusFilter implements TaggableFilter {
     }
   }
   toString():string {
-    return 'status:' + this.status;
+    return `status:${this.status}`;
   }
 }
 
+export class UpdatedFilter implements TaggableFilter {
+  constructor(private date:string) {
+    function pad(number) {
+      if (number < 10) {
+        return '0' + number;
+      }
+      return number;
+    }
+    const aDate = new Date(date);
+    this.date = aDate.getUTCFullYear() +
+      '-' + pad(aDate.getUTCMonth() + 1) +
+      '-' + pad(aDate.getUTCDate()) +
+      'T' + pad(aDate.getUTCHours()) +
+      ':' + pad(aDate.getUTCMinutes()) +
+      ':' + pad(aDate.getUTCSeconds()) +
+      'Z';
+  }
+  accept(taggable:Taggable):boolean {
+    if (taggable.target.metadata.updated_at) {
+      return this.date.localeCompare(taggable.target.metadata.updated_at) <= 0;
+    } else {
+      return this.date.localeCompare(taggable.target.metadata.created_at) <= 0;
+    }
+  }
+  toString():string {
+    return `updated_at:${this.date}`;
+  }
+}
 export class TaggableFilterFactory {
   static buildFilter(query:string, includeParents:boolean):TaggableFilter {
     if (query === null || query === undefined) {
@@ -212,6 +240,8 @@ export class TaggableFilterFactory {
         return new StatusFilter(text.substring('status:'.length));
       } else if (text.startsWith('diego:')) {
         return new DiegoFilter("true" === text.substring('diego:'.length));
+      } else if (text.startsWith('updated_at')) {
+        return new UpdatedFilter(text.substring('updated_at:'.length));
       } else {
         return new TextFilter(text);
       }
