@@ -224,7 +224,7 @@ export class Application extends Taggable {
   }
   getAppUrls():string[] {
     return this.children['routes'].map((route) =>
-      `https://${route.target.entity.host}.${route.links['domain'].target.entity.name}`);
+      `https://${route.target.entity.host}.${route.links['domain'].target.entity.name}${route.target.entity.path}`);
   }
 }
 
