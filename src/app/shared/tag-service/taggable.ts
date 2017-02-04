@@ -10,7 +10,7 @@ export class Taggable {
   _id: string;
   _rev: string;
   type: string;
-  tags: string[];
+  tags: any[]; // tags can be string[] or the new TagModel from ng2-tag-input
   target: any; // the app, org, space object with useful data to display
   region: string;
   links: Taggable[] = [];

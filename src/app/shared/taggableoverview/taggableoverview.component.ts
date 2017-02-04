@@ -20,12 +20,12 @@ export class TaggableOverviewComponent {
   constructor(private tagService:TagService) {
   }
 
-  onTagAdded(item:string) {
+  onTagAdded(item:any) {
     this.tagService.saveTaggable(this.taggable);
     this.tagService.addTag(item);
   }
 
-  onTagRemoved(item:string) {
+  onTagRemoved(item:any) {
     this.tagService.saveTaggable(this.taggable);
   }
 

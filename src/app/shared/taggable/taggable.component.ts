@@ -27,12 +27,12 @@ export class TaggableComponent {
     return this.tagService.getTaggable(guid);
   }
 
-  onTagAdded(item:string) {
+  onTagAdded(item:any) {
     this.tagService.saveTaggable(this.taggable);
     this.tagService.addTag(item);
   }
 
-  onTagRemoved(item:string) {
+  onTagRemoved(item:any) {
     this.tagService.saveTaggable(this.taggable);
   }
 

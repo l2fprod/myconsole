@@ -75,7 +75,13 @@ export class TypeFilter implements TaggableFilter {
 export class TagFilter implements TaggableFilter {
   constructor(private tag:string) {}
   accept(taggable:Taggable):boolean {
-    return taggable.tags.indexOf(this.tag)>=0;
+    return taggable.tags.find((item) => {
+      if (item.value) {
+        return item.value.indexOf(this.tag)>=0;
+      } else {
+        return item.indexOf(this.tag)>=0;
+      }
+    }) != null;
   }
   toString():string {
     return 'tag:' + this.tag;
