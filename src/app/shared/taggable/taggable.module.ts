@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MaterialModule } from '@angular/material';
 import { TaggableComponent } from './taggable.component';
-import { TagInputModule } from 'ng2-tag-input';
 import { TaggablePopupModule } from '../taggablepopup/taggablepopup.module';
 
 @NgModule({
@@ -11,7 +10,6 @@ import { TaggablePopupModule } from '../taggablepopup/taggablepopup.module';
     FormsModule,
     MaterialModule,
     CommonModule,
-    TagInputModule,
     TaggablePopupModule,
   ],
   declarations: [
