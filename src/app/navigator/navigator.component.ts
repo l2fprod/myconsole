@@ -17,6 +17,7 @@ export class NavigatorComponent extends TaggableViewerComponent implements OnIni
 
   constructor(public tagService: TagService, public changeDetectorRef: ChangeDetectorRef) {
     super(tagService, changeDetectorRef);
+    this.selectDefault();
   }
 
   getOrganizations():Taggable[] {
@@ -38,7 +39,7 @@ export class NavigatorComponent extends TaggableViewerComponent implements OnIni
     this.selectedItem = item;
   }
 
-  getSpaces(org:Taggable) {
+  getSpaces() {
     return this.selectedOrganization ? this.tagService.applyFilter(this.selectedOrganization.children['spaces']) : [];
   }
 
@@ -52,7 +53,20 @@ export class NavigatorComponent extends TaggableViewerComponent implements OnIni
 
   onNewTaggables(taggables:Taggable[]) {
     super.onNewTaggables(taggables);
-    this.selectOrganization(null);
+    this.selectDefault();
   }
 
+  private selectDefault() {
+    this.selectOrganization(null);
+
+    const orgs = this.getOrganizations();
+    if (orgs.length > 0) {
+      this.selectOrganization(orgs[0]);
+    }
+
+    const spaces = this.getSpaces();
+    if (spaces.length > 0) {
+      this.selectSpace(spaces[0]);
+    }
+  }
 }

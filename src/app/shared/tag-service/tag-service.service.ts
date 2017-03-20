@@ -83,8 +83,8 @@ export class TagService {
   /**
    * Records the tag so it can be customized, reused in autocompletion
    */
-  addTag(tag: string) {
-    this._tagsDb.put({ _id: tag })
+  addTag(tag: any) {
+    this._tagsDb.put({ _id: tag.value || tag })
       .then((response: any) => {
         console.log('New tag saved', response);
       })

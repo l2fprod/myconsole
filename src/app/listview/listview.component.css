@@ -1,3 +1,11 @@
+.browser-box-title {
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 14px;
+  font-weight: bold;
+  margin: 8px;
+}
+
 .toggle-editable {
   margin-left: 20px;
 }

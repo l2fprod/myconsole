@@ -5,7 +5,7 @@
   <div class="flex layout-row">
     <div class="taggables flex layout-column">
       <div *ngFor="let currentType of getTaggableTypes()">
-        {{currentType.plural}}
+        <span class="browser-box-title">{{currentType.plural}} ({{getTaggableByType(currentType).length}})</span>
         <md-card class="taggable-list">
           <md-list dense>
             <md-list-item *ngIf="getTaggableByType(currentType).length == 0" class="taggable-list-item">
