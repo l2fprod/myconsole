@@ -26,6 +26,10 @@
 .number-per-region {
   position: relative;
   display: inline;
+}
+
+.number-per-region div {
+  display: inline;
   white-space: nowrap;
 }
 

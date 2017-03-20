@@ -10,8 +10,10 @@
       {{currentType.plural}}
     </div>
     <div class="number-per-region" *ngFor="let region of getRegions()">
-      <span class="flag-icon flag-icon-{{region.icon}}"></span>
-      {{stats[region.name].count[currentType.name]}}
+      <div>
+        <span class="flag-icon flag-icon-{{region.icon}}"></span>
+        {{stats[region.name].count[currentType.name]}}
+      </div>
     </div>
   </md-card>
   <md-card class="flex box">
@@ -25,8 +27,10 @@
       Memory
     </div>
     <div class="number-per-region" *ngFor="let region of getRegions()">
-      <span class="flag-icon flag-icon-{{region.icon}}"></span>
-      {{(stats[region.name].memory/1024).toFixed(1)}}GB
+      <div>
+        <span class="flag-icon flag-icon-{{region.icon}}"></span>
+        {{(stats[region.name].memory/1024).toFixed(1)}}GB
+      </div>
     </div>
   </md-card>
 </div>

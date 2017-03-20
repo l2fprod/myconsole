@@ -13,6 +13,11 @@ export const environment = {
       flag: 'gb'
     },
     {
+      id: 'eu-de',
+      label: 'Germany',
+      flag: 'de'
+    },
+    {
       id: 'au-syd',
       label: 'Sydney',
       flag: 'au'
