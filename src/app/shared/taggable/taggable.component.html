@@ -2,7 +2,7 @@
   <!-- <md-icon md-list-avatar *ngIf="'STARTED'===taggable.target.entity.state" class="status status-STARTED" fontSet="fa" fontIcon="fa-play"></md-icon>
   <md-icon md-list-avatar *ngIf="'STOPPED'===taggable.target.entity.state" class="status status-STOPPED" fontSet="fa" fontIcon="fa-stop"></md-icon> -->
   <div class="layout-row layout-fill">
-    <span class="taggable-flag flag-icon flag-icon-{{taggable.getRegion().icon}}"></span>
+    <span *ngIf="showFlag" class="taggable-flag flag-icon flag-icon-{{taggable.getRegion().icon}}"></span>
 
     <md-icon
       *ngIf="taggable.type==='app'"

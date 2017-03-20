@@ -19,6 +19,7 @@
           <sd-taggable class="taggable" [ngClass]="{'is-selected': selectedSpace===taggable}"
             *ngFor="let taggable of getSpaces()"
             (click)="selectSpace(taggable);"
+            [showFlag]="false"
             [showOrg]="false"
             [taggable]="taggable">
           </sd-taggable>
@@ -34,6 +35,7 @@
           <sd-taggable class="taggable" [ngClass]="{'is-selected': selectedItem===taggable}"
             *ngFor="let taggable of getApps()"
             (click)="selectItem(taggable)"
+            [showFlag]="false"
             [showOrg]="false"
             [showSpace]="false"
             [taggable]="taggable">
@@ -48,6 +50,7 @@
           <sd-taggable class="taggable" [ngClass]="{'is-selected': selectedItem===taggable}"
             *ngFor="let taggable of getServices()"
             (click)="selectItem(taggable)"
+            [showFlag]="false"
             [showOrg]="false"
             [showSpace]="false"
             [taggable]="taggable">
