@@ -281,4 +281,13 @@ export class ServiceInstance extends Taggable {
   getTargetUrl():string {
     return `https://console.${this.region}.bluemix.net/services/${this.target.metadata.guid}`;
   }
+  // return true if the service this instance is linked to has been updated after this service was created.
+  isOutdated():boolean {
+    try {
+      return this.target.metadata.created_at
+        .localeCompare(this.links['service'].target.metadata.updated_at) <= 0;
+    } catch (err) {
+      return false;
+    }
+  }
 }

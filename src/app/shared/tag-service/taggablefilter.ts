@@ -1,4 +1,4 @@
-import { Taggable, Application } from './taggable';
+import { Taggable, Application, ServiceInstance } from './taggable';
 
 export interface TaggableFilter {
   accept(taggable:Taggable):boolean;
@@ -192,6 +192,18 @@ export class StatusFilter implements TaggableFilter {
   }
 }
 
+export class OutdatedFilter implements TaggableFilter {
+  constructor(private outdated:boolean) { }
+  accept(taggable:Taggable):boolean {
+    try {
+      return taggable.type === 'service_instance' &&
+      (taggable as ServiceInstance).isOutdated() === this.outdated;
+    } catch(err) {
+      return false;
+    }
+  }
+}
+
 export class UpdatedFilter implements TaggableFilter {
   constructor(private date:string) {
     function pad(number) {
@@ -246,8 +258,10 @@ export class TaggableFilterFactory {
         return new StatusFilter(text.substring('status:'.length));
       } else if (text.startsWith('diego:')) {
         return new DiegoFilter("true" === text.substring('diego:'.length));
-      } else if (text.startsWith('updated_at')) {
+      } else if (text.startsWith('updated_at:')) {
         return new UpdatedFilter(text.substring('updated_at:'.length));
+      } else if (text.startsWith('outdated:')) {
+        return new OutdatedFilter(text.substring('outdated:'.length) === 'true');
       } else {
         return new TextFilter(text);
       }
