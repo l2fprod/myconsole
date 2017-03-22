@@ -1,5 +1,9 @@
 import { Taggable, Application, ServiceInstance } from './taggable';
 
+function containsIgnoreCase(text:string, searchValue:string):boolean {
+  return text.toLowerCase().indexOf(searchValue.toLowerCase()) >= 0;
+}
+
 export interface TaggableFilter {
   accept(taggable:Taggable):boolean;
 }
@@ -49,7 +53,7 @@ export class TextFilter implements TaggableFilter {
   constructor(private text:string) {}
   accept(taggable:Taggable):boolean {
     try {
-      return (taggable.target.entity.name && taggable.target.entity.name.indexOf(this.text)>=0)
+      return (taggable.target.entity.name && containsIgnoreCase(taggable.target.entity.name, this.text))
         || taggable.tags.indexOf(this.text)>=0
         || taggable.region.indexOf(this.text)>=0;
     } catch(err) {
@@ -77,9 +81,9 @@ export class TagFilter implements TaggableFilter {
   accept(taggable:Taggable):boolean {
     return taggable.tags.find((item) => {
       if (item.value) {
-        return item.value.indexOf(this.tag)>=0;
+        return containsIgnoreCase(item.value, this.tag);
       } else {
-        return item.indexOf(this.tag)>=0;
+        return containsIgnoreCase(item, this.tag);
       }
     }) != null;
   }
@@ -103,7 +107,7 @@ export class UrlFilter implements TaggableFilter {
   constructor(private url:string) {}
   accept(taggable:Taggable):boolean {
     return taggable.type === Taggable.TYPE_APPLICATION.name &&
-    (taggable as Application).getAppUrls().find(url => url.indexOf(this.url) >= 0) != null;
+    (taggable as Application).getAppUrls().find(url => containsIgnoreCase(url, this.url)) != null;
   }
   toString():string {
     return 'url:' + this.url;
@@ -116,8 +120,8 @@ export class OrganizationFilter implements TaggableFilter {
   accept(taggable:Taggable):boolean {
     try {
       return (taggable.type === 'organization' &&
-         taggable.target.entity.name.toLowerCase().indexOf(this.org)>=0)
-         || taggable.links['org'].target.entity.name.toLowerCase().indexOf(this.org)>=0;
+         containsIgnoreCase(taggable.target.entity.name, this.org))
+         || containsIgnoreCase(taggable.links['org'].target.entity.name, this.org);
     } catch(err) {
       return false;
     }
@@ -134,8 +138,8 @@ export class SpaceFilter implements TaggableFilter {
   accept(taggable:Taggable):boolean {
     try {
       return (taggable.type === 'space' &&
-         taggable.target.entity.name.toLowerCase().indexOf(this.space)>=0)
-         || taggable.links['space'].target.entity.name.toLowerCase().indexOf(this.space)>=0;
+         containsIgnoreCase(taggable.target.entity.name, this.space))
+         || containsIgnoreCase(taggable.links['space'].target.entity.name, this.space);
     } catch(err) {
       return false;
     }
@@ -148,7 +152,7 @@ export class SpaceFilter implements TaggableFilter {
 export class RegionFilter implements TaggableFilter {
   constructor(private region:string) {}
   accept(taggable:Taggable):boolean {
-    return taggable.region.indexOf(this.region)>=0;
+    return containsIgnoreCase(taggable.region, this.region);
   }
   toString():string {
     return 'region:' + this.region;
@@ -161,7 +165,7 @@ export class ServiceFilter implements TaggableFilter {
   }
   accept(taggable:Taggable):boolean {
     try {
-      return taggable.links['service'].target.entity.label.toLowerCase().indexOf(this.service)>=0;
+      return containsIgnoreCase(taggable.links['service'].target.entity.label, this.service);
     } catch(err) {
       return false;
     }
