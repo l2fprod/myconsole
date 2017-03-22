@@ -11,30 +11,30 @@
     <md-card-actions align="end">
       <button md-raised-button color="primary" (click)="setToken(token.value);">Apply</button>
     </md-card-actions>
-    <md-card-content *ngIf="decodedToken">
+    <md-card-content *ngIf="getDecodedToken()">
       <h2>Inside the token</h2>
       <table style="width: 100%" cellspacing="0">
         <tr>
           <td>
             <md-input-container class="decoded-value">
-              <input md-input placeholder="User name" disabled ngModel="{{decodedToken.user_name}}">
+              <input md-input placeholder="User name" disabled ngModel="{{getDecodedToken().user_name}}">
             </md-input-container>
           </td>
           <td>
             <md-input-container class="decoded-value">
-              <input md-input placeholder="Email" disabled ngModel="{{decodedToken.email}}">
+              <input md-input placeholder="Email" disabled ngModel="{{getDecodedToken().email}}">
             </md-input-container>
           </td>
         </tr>
         <tr>
           <td>
             <md-input-container class="decoded-value">
-              <input md-input placeholder="Issued at" disabled ngModel="{{decodedToken.iat}}">
+              <input md-input placeholder="Issued at" disabled ngModel="{{getDecodedToken().iat}}">
             </md-input-container>
           </td>
           <td>
             <md-input-container class="decoded-value">
-              <input md-input placeholder="Expires at" disabled ngModel="{{decodedToken.exp}}">
+              <input md-input placeholder="Expires at" disabled ngModel="{{getDecodedToken().exp}}">
             </md-input-container>
           </td>
         </tr>

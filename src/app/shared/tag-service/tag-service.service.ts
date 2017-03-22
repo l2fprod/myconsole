@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 import { Observer } from 'rxjs/Observer';
+import { JwtHelper } from 'angular2-jwt';
 import { Taggable, TaggableType } from './taggable';
 import { TaggableFilter, TaggableFilterFactory, AcceptAllFilter } from './taggablefilter';
 import { environment } from '../../../environments';
@@ -35,7 +36,10 @@ export class TagService {
 
   public refreshing: boolean = false;
   public refreshStatus: any = { }
-  public token: string;
+
+  private jwtHelper: JwtHelper = new JwtHelper();
+  private token: string;
+  private decodedToken:any;
 
   public static REGIONS = environment.regions.map(region =>
     new Region(region.id, region.label, region.flag));
@@ -57,7 +61,7 @@ export class TagService {
     this.addIndex(this._taggablesDb, [ 'type' ]);
     this.addIndex(this._taggablesDb, [ 'tags' ]);
 
-    this.token = localStorageService.get('token') as string;
+    this.setToken(localStorageService.get('token') as string);
 
     this.loadTaggables(null);
   }
@@ -140,10 +144,40 @@ export class TagService {
     return taggables.filter(taggable => this._filter.accept(taggable));
   }
 
-  setToken(token:string) {
+  getToken():string {
+    return this.token;
+  }
+
+  getDecodedToken():any {
+    return this.decodedToken;
+  }
+
+  private decodeToken(token:string) {
+    this.decodedToken = this.jwtHelper.decodeToken(token);
+    this.decodedToken.iat = new Date(this.decodedToken.iat * 1000);
+    this.decodedToken.exp = new Date(this.decodedToken.exp * 1000);
+    console.log('Decoded token', this.decodedToken);
+  }
+
+  setToken(token:string):boolean {
     console.log('Setting token to', token);
-    this.token = token;
-    this.localStorageService.set('token', token);
+
+    try {
+      // remove any carriage return in the token
+      const sanitizedToken = token.replace(/\r?\n|\r/g, '').trim();
+      this.decodeToken(sanitizedToken);
+      this.token = sanitizedToken;
+      this.localStorageService.set('token', token);
+      return true;
+    } catch (err) {
+      console.log(err);
+      return false;
+    };
+
+  }
+
+  isTokenExpired():boolean {
+    return this.getToken() != null && this.decodedToken.exp.getTime() < new Date().getTime();
   }
 
   stopApp(app:Taggable) {

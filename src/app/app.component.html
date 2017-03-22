@@ -20,7 +20,12 @@
           No token set!
         </a>
       </span>
-      <span *ngIf="hasToken()">
+      <span *ngIf="isTokenExpired()">
+        <a md-raised-button color="warn" routerLink="/settings" preserveQueryParams preserveFragment>
+          Token has expired!
+        </a>
+      </span>
+      <span *ngIf="hasToken() && !isTokenExpired()">
         <button [disabled]="isRefreshing()" md-raised-button color="accent" (click)="refreshAll();"
                 angulartics2On="click" angularticsCategory="Actions" angularticsEvent="refresh-all">Refresh All</button>
         <!-- <button [disabled]="isRefreshing()" md-raised-button color="accent" (click)="refreshApps();"

@@ -50,7 +50,7 @@ export class TaggableComponent {
   }
 
   hasToken() {
-    return this.tagService.token != null;
+    return this.tagService.getToken() != null;
   }
 
   enableDiego(app:Taggable) {

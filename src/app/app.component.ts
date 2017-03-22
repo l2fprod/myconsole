@@ -49,7 +49,11 @@ export class AppComponent {
   }
 
   hasToken() {
-    return this.tagService.token != null;
+    return this.tagService.getToken() != null;
+  }
+
+  isTokenExpired() {
+    return this.tagService.isTokenExpired();
   }
 
   clearSearch() {

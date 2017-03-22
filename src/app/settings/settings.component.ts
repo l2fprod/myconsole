@@ -1,7 +1,6 @@
 import { Angulartics2 } from 'angulartics2';
 import { Component, ChangeDetectorRef } from '@angular/core';
 import { TagService, TaggableViewerComponent } from '../shared/index';
-import { JwtHelper } from 'angular2-jwt';
 
 @Component({
   selector: 'settings',
@@ -10,36 +9,21 @@ import { JwtHelper } from 'angular2-jwt';
 })
 export class SettingsComponent extends TaggableViewerComponent {
 
-  jwtHelper: JwtHelper = new JwtHelper();
-  decodedToken:any;
-
   constructor(public tagService: TagService, public changeDetectorRef: ChangeDetectorRef, private stats: Angulartics2) {
     super(tagService, changeDetectorRef);
-
-    try {
-      this.decode(tagService.token);
-    } catch(err) {}
   }
 
   getToken() {
-    return this.tagService.token;
+    return this.tagService.getToken();
+  }
+
+  getDecodedToken() {
+    return this.tagService.getDecodedToken();
   }
 
   setToken(token:string) {
-    try {
-      // remove any carriage return in the token
-      const sanitizedToken = token.replace(/\r?\n|\r/g, '').trim();
-      this.decode(sanitizedToken);
-      this.tagService.setToken(sanitizedToken);
-      this.stats.eventTrack.next({ action: 'set-token', properties: { category: 'Actions' }});
-    } catch (err) {
-      console.log(err);
-    };
+    this.stats.eventTrack.next({ action: 'set-token', properties: { category: 'Actions' }});
+    this.tagService.setToken(token);
   }
 
-  private decode(token:string) {
-    this.decodedToken = this.jwtHelper.decodeToken(token);
-    this.decodedToken.iat = new Date(this.decodedToken.iat * 1000);
-    this.decodedToken.exp = new Date(this.decodedToken.exp * 1000);
-  }
 }
