@@ -150,7 +150,7 @@ export class Organization extends Taggable {
     this.children['spaces'] = [];
   }
   getTargetUrl():string {
-    return `https://console.${this.region}.bluemix.net/dashboard/apps/?orgName=${encodeURIComponent(this.target.entity.name)}`;
+    return `https://console.bluemix.net/dashboard/apps/?orgName=${encodeURIComponent(this.target.entity.name)}&env_id=${encodeURIComponent(this.getRegion().envId)}`;
   }
 }
 
@@ -205,7 +205,7 @@ export class Space extends Taggable {
   }
 
   getTargetUrl():string {
-    return `https://console.${this.region}.bluemix.net/dashboard/apps/?orgName=${encodeURIComponent(this.links['org'].target.entity.name)}&spaceName=${encodeURIComponent(this.target.entity.name)}`;
+    return `https://console.bluemix.net/dashboard/apps/?orgName=${encodeURIComponent(this.links['org'].target.entity.name)}&spaceName=${encodeURIComponent(this.target.entity.name)}&env_id=${encodeURIComponent(this.getRegion().envId)}`;
   }
 }
 
@@ -220,7 +220,7 @@ export class Application extends Taggable {
     this.links['org'] = findByGuid(this.links['space'].target.entity.organization_guid);
   }
   getTargetUrl():string {
-    return `https://console.${this.region}.bluemix.net/apps/${this.target.metadata.guid}`;
+    return `https://console.bluemix.net/apps/${this.target.metadata.guid}?env_id=${encodeURIComponent(this.getRegion().envId)}`;
   }
   getAppUrls():string[] {
     return this.children['routes'].map((route) =>
@@ -279,7 +279,7 @@ export class ServiceInstance extends Taggable {
     }
   }
   getTargetUrl():string {
-    return `https://console.${this.region}.bluemix.net/services/${this.target.metadata.guid}`;
+    return `https://console.bluemix.net/services/${this.target.metadata.guid}?orgName=${encodeURIComponent(this.links['org'].target.entity.name)}&spaceName=${encodeURIComponent(this.target.entity.name)}&env_id=${encodeURIComponent(this.getRegion().envId)}`;
   }
   // return true if the service this instance is linked to has been updated after this service was created.
   isOutdated():boolean {

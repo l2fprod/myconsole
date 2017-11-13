@@ -15,7 +15,7 @@ declare let require: any;
 PouchDB.plugin(require('pouchdb-find'));
 
 export class Region {
-  constructor(public name: string, public display: string, public icon:string) { }
+  constructor(public name: string, public display: string, public icon:string, public envId:string) { }
 }
 
 
@@ -42,7 +42,7 @@ export class TagService {
   private decodedToken:any;
 
   public static REGIONS = environment.regions.map(region =>
-    new Region(region.id, region.label, region.flag));
+    new Region(region.id, region.label, region.flag, region.env_id));
 
   /**
    * @param {Http} http - The injected Http.

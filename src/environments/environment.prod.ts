@@ -5,22 +5,26 @@ export const environment = {
     {
       id: 'ng',
       label: 'US South',
-      flag: 'us'
+      flag: 'us',
+      env_id: 'ibm:yp:us-south',
     },
     {
       id: 'eu-gb',
       label: 'United Kingdom',
-      flag: 'gb'
+      flag: 'gb',
+      env_id: 'ibm:yp:eu-gb',
     },
     {
       id: 'eu-de',
       label: 'Germany',
-      flag: 'de'
+      flag: 'de',
+      env_id: 'ibm:yp:eu-de',
     },
     {
       id: 'au-syd',
       label: 'Sydney',
-      flag: 'au'
+      flag: 'au',
+      env_id: 'ibm:yp:au-syd',
     }
   ]
 };
